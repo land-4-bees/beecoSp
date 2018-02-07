@@ -1,2 +1,2 @@
-# custom-spatial
-Library of custom spatial functions
+# beecoSp
+Library of custom spatial functions for bee landscape ecology research
