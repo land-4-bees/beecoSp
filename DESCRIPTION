@@ -1,11 +1,10 @@
 Package: beecoSp
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Custom spatial functions for bee landscape ecology
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Melanie Kammerer Allen <melanie.a.kammerer@gmail.com>, Maggie Douglas <douglasm@dickinson.edu>
+Maintainer: Melanie Kammerer Allen <melanie.a.kammerer@gmail.com>
+Description: Custom spatial functions for bee landscape ecology
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
