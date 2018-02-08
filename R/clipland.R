@@ -28,12 +28,12 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar){
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }
 
-#'Clip landscape raster by polygon
+#'Buffer and reproject input points or polygons
 #'
 #'Clip landscape raster by polygon or buffered point features
 #'@param rasterpath Full path name for landscape raster file
-#'@param featurepath Full path name for polygon or point shapefile
-#'@param usepoints Start with points shapefile of landscape centroids
+#'@param featurepath Full path name for point or polygon shapefile
+#'@param usepoints Shapefile is points, default is FALSE
 #'@param bufferdist Radius of desired landscape buffer in km
 #'@keywords bees landscape ecology spatial
 #'@export
@@ -70,9 +70,11 @@ return(polygons)
 #'Execute landscape clip and mask
 #'
 #'Execute landscape clip and mask
+#'@param polygons SpatialPolygonDataFrame of polygons to use to clip raster
+#'@param rasterpath Full path name for landscape raster file
 #'@param outdir Directory where .tif landscape clips are to be stored, do not include final backslash
 #'@param idvar Identifying variable name within feature shapefile to use for naming output rasters
-#'#'@keywords bees landscape ecology spatial
+#'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
 #' execute_landclip()
