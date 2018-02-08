@@ -4,7 +4,7 @@
 #'@param polygonID id of specific polygon used for clip and mask
 #'@param land landscape raster, passed from 'clipland' function
 #'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from'clipland' function
-#'@param idvar Variable name within 'polygons' that defines id variable, passed from 'clipland' function
+#'@param idvar Identifying variable name within feature shapefile, passed from 'clipland' function
 #'@param outdir Directory where .tif landscape clips are to be stored, passed from 'clipland'
 #'@keywords bees landscape ecology spatial
 #'@export
@@ -28,25 +28,19 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar){
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }
 
-#'Clip landscape raster by polygon or buffered point
+#'Clip landscape raster by polygon
 #'
 #'Clip landscape raster by polygon or buffered point features
 #'@param rasterpath Full path name for landscape raster file
 #'@param featurepath Full path name for polygon or point shapefile
 #'@param usepoints Start with points shapefile of landscape centroids
 #'@param bufferdist Radius of desired landscape buffer in km
-#'@param outdir Directory where .tif landscape clips are to be stored, do not include final backslash
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
-#' clipland()
+#' bufferproject()
 
-clipland <- function(rasterpath, featurepath, points=F, buffer=NA){
-  #check that output directory is valid
-  if (!file.exists(outdir)){
-    #create folder if the directory doesn't exist
-    dir.create(outdir)
-  }
+bufferproject<- function(rasterpath, featurepath, usepoints=F, buffer=NA){
 
   land <- raster::raster(rasterpath)
   if (usepoints == T) {
@@ -68,22 +62,42 @@ clipland <- function(rasterpath, featurepath, points=F, buffer=NA){
   } else {
     #if using polygons, import them directly
     polygons <- rgdal::readOGR(featurepath)
-    #check that polygons are in same projection as landscape raster
-    #if projections are not the same, project polygon layer
-    if (sp::proj4string(land) != sp::proj4string(polygons)) {
-      polygons <- sp::spTransform(polygons, CRS=sp::proj4string(land))
-    }
   }
 
-polygon_ids <- as.list(polygons[[idvar]])
+return(polygons)
+}
 
-#ames(polygon_ids) <- 'LandName'
-#polygon_ids$LandName <- as.character(polygon_ids$LandName) %>%
-#                        as.list(polygon_ids)
+#'Execute landscape clip and mask
+#'
+#'Execute landscape clip and mask
+#'@param outdir Directory where .tif landscape clips are to be stored, do not include final backslash
+#'@param idvar Identifying variable name within feature shapefile to use for naming output rasters
+#'#'@keywords bees landscape ecology spatial
+#'@export
+#'@examples
+#' execute_landclip()
+#'
+#'
+execute_landclip <- function(polygons, rasterpath, idvar, outdir) {
+  #check that output directory is valid
+  if (!file.exists(outdir)){
+    #create folder if the directory doesn't exist
+    dir.create(outdir)
+  }
 
-polygonID <- polygon_ids[[1]]
+  land <- raster::raster(rasterpath)
 
-plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar)
+  #check that polygons are in same projection as landscape raster
+  #if projections are not the same, project polygon layer
+  if (sp::proj4string(land) != sp::proj4string(polygons)) {
+    polygons <- sp::spTransform(polygons, CRS=sp::proj4string(land))
+  }
+
+  #store list of names of landscapes to be processed
+  polygon_ids <- as.list(polygons[[idvar]])
+
+
+  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar)
 
 }
 
