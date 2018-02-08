@@ -15,7 +15,7 @@ clipmask(land, polygonID, polygons, outdir, idvar)
 
 \item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'clipland'}
 
-\item{idvar}{Variable name within 'polygons' that defines id variable, passed from 'clipland' function}
+\item{idvar}{Identifying variable name within feature shapefile, passed from 'clipland' function}
 }
 \description{
 Clip landscape raster by polygon or buffered point features

@@ -1,11 +1,11 @@
 #'Clip landscape raster by polygon or buffered point
 #'
-#'Clip landscape raster by polygon or buffered point features
+#'Internal function that clip landscapes within 'execute_landmask', not to be called directly
 #'@param polygonID id of specific polygon used for clip and mask
-#'@param land landscape raster, passed from 'clipland' function
-#'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from'clipland' function
-#'@param idvar Identifying variable name within feature shapefile, passed from 'clipland' function
-#'@param outdir Directory where .tif landscape clips are to be stored, passed from 'clipland'
+#'@param land landscape raster, passed from 'execute_landmask'
+#'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landmask'
+#'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landmask'
+#'@param outdir Directory where .tif landscape clips are to be stored, passed from ''execute_landmask'
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
