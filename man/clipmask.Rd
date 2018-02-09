@@ -7,21 +7,21 @@
 clipmask(land, polygonID, polygons, outdir, idvar)
 }
 \arguments{
-\item{land}{landscape raster, passed from 'execute_landmask'}
+\item{land}{landscape raster, passed from 'execute_landclip'}
 
 \item{polygonID}{id of specific polygon used for clip and mask}
 
-\item{polygons}{SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landmask'}
+\item{polygons}{SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landclip'}
 
-\item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'execute_landmask'}
+\item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'}
 
-\item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landmask'}
+\item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landclip'}
 }
 \description{
-Internal function that clip landscapes within 'execute_landmask', not to be called directly
+Internal function that clip landscapes within 'execute_landclip', not to be called directly
 }
 \examples{
-see 'execute_landmask' for usage example.
+see 'execute_landclip' for usage example.
 }
 \keyword{bees}
 \keyword{ecology}

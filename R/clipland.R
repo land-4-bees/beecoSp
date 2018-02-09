@@ -1,15 +1,15 @@
 #'Clip landscape raster by polygon or buffered point
 #'
-#'Internal function that clip landscapes within 'execute_landmask', not to be called directly
+#'Internal function that clip landscapes within 'execute_landclip', not to be called directly
 #'@param polygonID id of specific polygon used for clip and mask
-#'@param land landscape raster, passed from 'execute_landmask'
-#'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landmask'
-#'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landmask'
-#'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landmask'
+#'@param land landscape raster, passed from 'execute_landclip'
+#'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landclip'
+#'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
+#'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
-#'see 'execute_landmask' for usage example.
+#'see 'execute_landclip' for usage example.
 
 #clip and mask landscape raster from polygon, export as .tif file
 clipmask <- function(land, polygonID, polygons, outdir, idvar){
