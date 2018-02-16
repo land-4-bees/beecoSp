@@ -40,7 +40,7 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar){
 #'@examples
 #' bufferproject()
 
-bufferproject<- function(rasterpath, featurepath, usepoints=F, buffer=NA){
+bufferproject<- function(rasterpath, featurepath, usepoints=F, bufferdist=NA){
 
   land <- raster::raster(rasterpath)
   if (usepoints == T) {
