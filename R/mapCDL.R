@@ -1,7 +1,7 @@
 #plot landscape with NASS CDL colors
 
 #import NASS attribute table
-NASS_attribute <- read.delim('E:/Melanie/Dell_herb_land/NASS_classes.txt')
+#NASS_attribute <- read.delim('E:/Melanie/Dell_herb_land/NASS_classes.txt')
 
 #Remove values with no description
 NASS_attribute <- NASS_attribute[NASS_attribute$CLASS_NAME != " ",]
