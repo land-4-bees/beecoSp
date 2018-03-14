@@ -4,7 +4,7 @@
 \alias{clipmask}
 \title{Clip landscape raster by polygon or buffered point}
 \usage{
-clipmask(land, polygonID, polygons, outdir, idvar)
+clipmask(land, polygonID, polygons, outdir, idvar, overrast)
 }
 \arguments{
 \item{land}{landscape raster, passed from 'execute_landclip'}
@@ -16,6 +16,8 @@ clipmask(land, polygonID, polygons, outdir, idvar)
 \item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'}
 
 \item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landclip'}
+
+\item{overrast}{Logical, should existing rasters with same filename be overwritten?}
 }
 \description{
 Internal function that clip landscapes within 'execute_landclip', not to be called directly

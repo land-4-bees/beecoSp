@@ -6,6 +6,7 @@
 #'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landclip'
 #'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
 #'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
+#'@param overrast Logical, should existing rasters with same filename be overwritten?
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
