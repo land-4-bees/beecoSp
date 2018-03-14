@@ -12,7 +12,7 @@
 #'see 'execute_landclip' for usage example.
 
 #clip and mask landscape raster from polygon, export as .tif file
-clipmask <- function(land, polygonID, polygons, outdir, idvar){
+clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast){
   #subset 'polygons' layer to just polygon that matches ID of specific row
   onepoly <- polygons[polygons[[idvar]] == polygonID,]
   clip <- raster::crop(land, onepoly)
@@ -24,7 +24,7 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar){
   rasterpath <- paste(outdir, nameraster, sep="/")
 
   #write raster file as .tif to output directory
-  raster::writeRaster(mask, filename=rasterpath, format='GTiff')
+  raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast)
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }
 
