@@ -7,7 +7,7 @@
 #'@param attr_path Path to .csv file of raster attribute table
 #'@param attr_value Column name in attribute table that specifies raster values
 #'@param background Logical, specify background value?
-#'@param bgvalue or NoData values to be excluded from total landscape area
+#'@param bgvalues or NoData values to be excluded from total landscape area
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
@@ -17,7 +17,7 @@
 #can specify a folder of landscapes (use landdir=T), or a list of landscape files
 #outputs a .csv output file of landscape composition values of all input landscapes
 
-landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, background=NA) {
+landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, attr_value, background=NA, bgvalues) {
 
 library('raster'); rasterOptions(tmptime=2)
 

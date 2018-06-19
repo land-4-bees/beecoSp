@@ -5,7 +5,7 @@
 \title{Calculate landscape percent land use, or any categorical raster}
 \usage{
 landcomp(landdir = T, landfiles, writeoutput = T, outfile, attr_path,
-  background = NA)
+  attr_value, background = NA, bgvalues)
 }
 \arguments{
 \item{landdir}{Logical specifying if 'landfiles' is a directory}
@@ -18,11 +18,11 @@ landcomp(landdir = T, landfiles, writeoutput = T, outfile, attr_path,
 
 \item{attr_path}{Path to .csv file of raster attribute table}
 
-\item{background}{Logical, specify background value?}
-
 \item{attr_value}{Column name in attribute table that specifies raster values}
 
-\item{bgvalue}{or NoData values to be excluded from total landscape area}
+\item{background}{Logical, specify background value?}
+
+\item{bgvalues}{or NoData values to be excluded from total landscape area}
 }
 \description{
 Calculate landscape percent land use, or any categorical raster
