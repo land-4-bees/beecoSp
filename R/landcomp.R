@@ -1,21 +1,23 @@
 #'Calculate landscape percent land use, or any categorical raster
 #'
-#'@param landdir Logical specifying if 'landfiles' path is a directory
-#'@param landfiles Path to landscape raster file (or files) to process
-#'@param outfile Filename and path to .csv file to store results
-#'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
-#'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
-#'@param overrast Logical, should existing rasters with same filename be overwritten?
+#'@param landdir Logical specifying if 'landfiles' is a directory
+#'@param landfiles Landscape raster files to process (path to directory or list of files)
+#'@param writeoutput Logical specifying if results should be written to .csv file
+#'@param outfile If writeoutput=T, path to .csv file to store results (including .csv filename)
+#'@param attr_path Path to .csv file of raster attribute table
+#'@param attr_value Column name in attribute table that specifies raster values
+#'@param background Logical, specify background value?
+#'@param bgvalue or NoData values to be excluded from total landscape area
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
-#'see 'execute_landclip' for usage example.
+#' Usage example coming soon.
 
 
 #can specify a folder of landscapes (use landdir=T), or a list of landscape files
 #outputs a .csv output file of landscape composition values of all input landscapes
 
-landcomp <- function(landdir=T, landfiles, outfile, writeoutput=T, attr_path) {
+landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, background=NA) {
 
 library('raster'); rasterOptions(tmptime=2)
 
@@ -25,14 +27,17 @@ if (landdir==T) {
   lands <- list.files(landfiles, pattern = "\\.tif$", full.names=T)
 }
 if (landdir==F) {lands <- landfiles}
+
 #calculate landscape composition for first landscape
 land <- raster(lands[1])
 
 df1 <- data.frame(table(values(land)))
+if (length(df1) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
 
-if (length(df1) == 2) {
 names(df1) <- c("VALUE", "Cell_Num")
-df1 <- df1[!df1$VALUE %in% c(0,-999),]
+if (background == T) {
+  df1 <- df1[!df1$VALUE %in% bgvalues,]
+}
 df1$Pct_Land <- (df1$Cell_Num/sum(df1$Cell_Num))*100
 df1$Landscape <- basename(lands[1])
 
@@ -43,8 +48,11 @@ if (length(lands) > 1) {
   for (i in 2:length(lands)) {
     land <- raster(lands[i])
     dfn <- data.frame(table(values(land)))
+    if (length(dfn) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
     names(dfn) <- c("VALUE", "Cell_Num")
-    dfn <- dfn[!dfn$VALUE %in% c(-999, 0),]
+    if (background == T) {
+      dfn <- dfn[!dfn$VALUE %in% bgvalues,]
+    }
     dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
     dfn$Landscape <- basename(lands[i])
 
@@ -57,17 +65,14 @@ if (length(lands) > 1) {
 NASS_attribute <- read.delim(attr_path)
 
 #add class names to data frame
-all <- merge(all, NASS_attribute[, c("VALUE", "CLASS_NAME")])
+all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value)
 all$VALUE <- all$VALUE[drop=T]
 
 
 if (writeoutput==T) {
-  write.csv(all, file=outfile) }
+  write.csv(all, file=outfile)
 }
 
-  if (length(df1) == 1){
-  all <- data.frame(VALUE=NA, Cell_Num=NA, Pct_Land=NA, Landscape=basename(lands), CLASS_NAME=NA)
-  }
 
 return(all)
 }
