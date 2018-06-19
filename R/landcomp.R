@@ -1,3 +1,16 @@
+#'Calculate landscape percent land use, or any categorical raster
+#'
+#'@param landdir Logical specifying if 'landfiles' path is a directory
+#'@param landfiles Path to landscape raster file (or files) to process
+#'@param outfile
+#'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
+#'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
+#'@param overrast Logical, should existing rasters with same filename be overwritten?
+#'@keywords bees landscape ecology spatial
+#'@export
+#'@examples
+#'see 'execute_landclip' for usage example.
+
 #purpose: calculate landscape composition of each input landscape
 #depends: none
 #input data: 'D:/Box Sync/herbland_V2/data/NASS_classes.txt'
@@ -7,10 +20,10 @@
 #outputs a .csv output file of landscape composition values of all input landscapes
 
 landcomp <- function(landdir=T, landfiles, outfile, writeoutput=T, attr_path) {
-  
+
 library('raster'); rasterOptions(tmptime=2)
 
-  
+
 #make list of raw landscape .tif files
 if (landdir==T) {
   lands <- list.files(landfiles, pattern = "\\.tif$", full.names=T)
@@ -38,7 +51,7 @@ if (length(lands) > 1) {
     dfn <- dfn[!dfn$VALUE %in% c(-999, 0),]
     dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
     dfn$Landscape <- basename(lands[i])
-  
+
     all <- rbind(dfn, all)
   }
 }
@@ -57,7 +70,7 @@ if (writeoutput==T) {
 }
 
   if (length(df1) == 1){
-  all <- data.frame(VALUE=NA, Cell_Num=NA, Pct_Land=NA, Landscape=basename(lands), CLASS_NAME=NA) 
+  all <- data.frame(VALUE=NA, Cell_Num=NA, Pct_Land=NA, Landscape=basename(lands), CLASS_NAME=NA)
   }
 
 return(all)
