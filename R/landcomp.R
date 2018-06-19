@@ -2,7 +2,7 @@
 #'
 #'@param landdir Logical specifying if 'landfiles' path is a directory
 #'@param landfiles Path to landscape raster file (or files) to process
-#'@param outfile
+#'@param outfile Filename and path to .csv file to store results
 #'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
 #'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
@@ -10,10 +10,6 @@
 #'@export
 #'@examples
 #'see 'execute_landclip' for usage example.
-
-#purpose: calculate landscape composition of each input landscape
-#depends: none
-#input data: 'D:/Box Sync/herbland_V2/data/NASS_classes.txt'
 
 
 #can specify a folder of landscapes (use landdir=T), or a list of landscape files

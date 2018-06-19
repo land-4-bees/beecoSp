@@ -25,6 +25,9 @@ CDL_reclass(rasterpath, reclasstable, from, to, writerast = F, outpath,
 \description{
 Reclassify land use (e.g. Crop Data Layer) raster by supplied matrix with option to calculate mean of new raster
 }
+\examples{
+'CDL_reclass' example forthcoming.
+}
 \keyword{bees}
 \keyword{ecology}
 \keyword{landscape}

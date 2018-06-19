@@ -11,6 +11,8 @@ landcomp(landdir = T, landfiles, outfile, writeoutput = T, attr_path)
 
 \item{landfiles}{Path to landscape raster file (or files) to process}
 
+\item{outfile}{Filename and path to .csv file to store results}
+
 \item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landclip'}
 
 \item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'}

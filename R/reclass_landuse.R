@@ -11,7 +11,7 @@
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
-#'CDL_reclass' example forthcoming.
+#' 'CDL_reclass' example forthcoming.
 
 
 CDL_reclass <- function(rasterpath, reclasstable, from, to, writerast=F, outpath, meanreclass) {
