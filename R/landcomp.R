@@ -39,7 +39,7 @@ if (background == T) {
   df1 <- df1[!df1$VALUE %in% bgvalues,]
 }
 df1$Pct_Land <- (df1$Cell_Num/sum(df1$Cell_Num))*100
-df1$Landscape <- basename(lands[1])
+df1$Landscape <- gsub(basename(lands[1]), pattern='.tif', replacement="")
 
 all <- df1
 
@@ -54,7 +54,7 @@ if (length(lands) > 1) {
       dfn <- dfn[!dfn$VALUE %in% bgvalues,]
     }
     dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
-    dfn$Landscape <- basename(lands[i])
+    dfn$Landscape <- gsub(basename(lands[i]), pattern='.tif', replacement="")
 
     all <- rbind(dfn, all)
   }
