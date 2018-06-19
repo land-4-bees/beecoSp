@@ -4,26 +4,31 @@
 \alias{landcomp}
 \title{Calculate landscape percent land use, or any categorical raster}
 \usage{
-landcomp(landdir = T, landfiles, outfile, writeoutput = T, attr_path)
+landcomp(landdir = T, landfiles, writeoutput = T, outfile, attr_path,
+  background = NA)
 }
 \arguments{
-\item{landdir}{Logical specifying if 'landfiles' path is a directory}
+\item{landdir}{Logical specifying if 'landfiles' is a directory}
 
-\item{landfiles}{Path to landscape raster file (or files) to process}
+\item{landfiles}{Landscape raster files to process (path to directory or list of files)}
 
-\item{outfile}{Filename and path to .csv file to store results}
+\item{writeoutput}{Logical specifying if results should be written to .csv file}
 
-\item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landclip'}
+\item{outfile}{If writeoutput=T, path to .csv file to store results (including .csv filename)}
 
-\item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'}
+\item{attr_path}{Path to .csv file of raster attribute table}
 
-\item{overrast}{Logical, should existing rasters with same filename be overwritten?}
+\item{background}{Logical, specify background value?}
+
+\item{attr_value}{Column name in attribute table that specifies raster values}
+
+\item{bgvalue}{or NoData values to be excluded from total landscape area}
 }
 \description{
 Calculate landscape percent land use, or any categorical raster
 }
 \examples{
-see 'execute_landclip' for usage example.
+Usage example coming soon.
 }
 \keyword{bees}
 \keyword{ecology}
