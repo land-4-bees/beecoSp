@@ -9,11 +9,9 @@ bufferproject(rasterpath, featurepath, usepoints = F, bufferdist = NA)
 \arguments{
 \item{rasterpath}{Full path name for landscape raster file}
 
-\item{featurepath}{Full path name for point or polygon shapefile}
+\item{featurepath}{Full path name for point shapefile}
 
-\item{usepoints}{Shapefile is points, default is FALSE}
-
-\item{bufferdist}{Radius of desired landscape buffer in km}
+\item{bufferdist}{Radius of desired landscape buffer in meters}
 }
 \description{
 Clip landscape raster by polygon or buffered point features
