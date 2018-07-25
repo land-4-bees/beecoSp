@@ -40,7 +40,7 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast){
 #'@examples
 #' bufferproject()
 
-bufferproject<- function(rasterpath, featurepath, usepoints=F, bufferdist=NA){
+bufferproject<- function(rasterpath, featurepath, bufferdist=NA){
 
   land <- raster::raster(rasterpath)
   #check that raster projection is in meters
