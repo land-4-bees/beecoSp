@@ -2,7 +2,7 @@
 % Please edit documentation in R/choosepoints.R
 \name{subsetplots}
 \alias{subsetplots}
-\title{Subset sites based on proximity to ensure independence of bee communities}
+\title{Subset sites based on proximity}
 \usage{
 subsetplots(points, cutoff)
 }
@@ -12,7 +12,10 @@ subsetplots(points, cutoff)
 \item{cutoff}{Distance cutoff for independent samples (typically average foraging range of bee(s))}
 }
 \description{
-Subset sites based on proximity to ensure independence of bee communities
+Select sites that are separated by some minimum distance to ensure independence of bee communities
+}
+\details{
+Distance cutoff must be specified in the same units as projection of spatial points layer.
 }
 \examples{
 Usage example coming soon.

@@ -1,7 +1,9 @@
-#'Subset sites based on proximity to ensure independence of bee communities
+#'Subset sites based on proximity
 #'
+#'Select sites that are separated by some minimum distance to ensure independence of bee communities
 #'@param points Spatial points object of sites (sampling locations)
 #'@param cutoff Distance cutoff for independent samples (typically average foraging range of bee(s))
+#'@details Distance cutoff must be specified in the same units as projection of spatial points layer.
 #'@export
 #'@examples
 #' Usage example coming soon.
