@@ -2,8 +2,8 @@
 #'
 #'Select sites that are separated by some minimum distance to ensure independence of bee communities
 #'@param points Spatial points object of sites (sampling locations)
-#'@param cutoff Distance cutoff for independent samples (typically average foraging range of bee(s))
-#'@details Distance cutoff must be specified in the same units as projection of spatial points layer.
+#'@param cutoff Distance cutoff (in meters) for independent samples (typically average foraging range of bee(s))
+#'@details Spatial points must lat/long (not projected). See 'distGeo' function (geosphere package) for details of distance calculation.
 #'@export
 #'@examples
 #' Usage example coming soon.
