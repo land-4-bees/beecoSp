@@ -4,7 +4,7 @@
 \alias{bufferproject}
 \title{Buffer and reproject input points or polygons}
 \usage{
-bufferproject(rasterpath, featurepath, usepoints = F, bufferdist = NA)
+bufferproject(rasterpath, featurepath, bufferdist = NA)
 }
 \arguments{
 \item{rasterpath}{Full path name for landscape raster file}
