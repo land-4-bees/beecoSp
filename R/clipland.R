@@ -74,7 +74,7 @@ return(polygons)
 #'@param idvar Identifying variable name within feature shapefile to use for naming output rasters
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
 #'@param parallel execute landscape clips in parallel? (if yes requires set up of parallel environment)
-#'#'@param navalue Numeric, to assign NA values in raster
+#'@param navalue Numeric, to assign NA values in raster
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples

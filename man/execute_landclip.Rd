@@ -18,8 +18,9 @@ execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel,
 
 \item{overrast}{Logical, should existing rasters with same filename be overwritten?}
 
-\item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)
-#'@param navalue Numeric, to assign NA values in raster}
+\item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)}
+
+\item{navalue}{Numeric, to assign NA values in raster}
 }
 \description{
 Execute landscape clip and mask
