@@ -7,17 +7,19 @@
 #'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
 #'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
+#'@param navalue Numeric, to assign NA values in raster
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
 #'see 'execute_landclip' for usage example.
 
 #clip and mask landscape raster from polygon, export as .tif file
-clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast){
+clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_value){
   #subset 'polygons' layer to just polygon that matches ID of specific row
   onepoly <- polygons[polygons[[idvar]] == polygonID,]
   clip <- raster::crop(land, onepoly)
   mask <- raster::mask(clip, onepoly)
+  NAvalue(mask) <- na_value
   #store id variable for specific landscape raster
   nameraster <- as.character(onepoly[[idvar]])
 
@@ -25,7 +27,7 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast){
   rasterpath <- paste(outdir, nameraster, sep="/")
 
   #write raster file as .tif to output directory
-  raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast)
+  raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast, NAflag=na_value)
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }
 
@@ -72,13 +74,14 @@ return(polygons)
 #'@param idvar Identifying variable name within feature shapefile to use for naming output rasters
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
 #'@param parallel execute landscape clips in parallel? (if yes requires set up of parallel environment)
+#'#'@param navalue Numeric, to assign NA values in raster
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
 #' execute_landclip()
 #'
 #'
-execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, parallel) {
+execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, parallel, navalue) {
   #check that output directory is valid
   if (!file.exists(outdir)){
     #create folder if the directory doesn't exist
@@ -97,7 +100,7 @@ execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, para
   polygon_ids <- as.list(polygons[[idvar]])
 
 
-  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast, .parallel=parallel)
+  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast, navalue=navalue, .parallel=parallel)
 
 }
 

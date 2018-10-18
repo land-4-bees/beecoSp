@@ -4,7 +4,8 @@
 \alias{execute_landclip}
 \title{Execute landscape clip and mask}
 \usage{
-execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel)
+execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel,
+  navalue)
 }
 \arguments{
 \item{polygons}{SpatialPolygonDataFrame of polygons to use to clip raster}
@@ -17,7 +18,8 @@ execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel)
 
 \item{overrast}{Logical, should existing rasters with same filename be overwritten?}
 
-\item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)}
+\item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)
+#'@param navalue Numeric, to assign NA values in raster}
 }
 \description{
 Execute landscape clip and mask

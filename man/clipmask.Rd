@@ -4,7 +4,7 @@
 \alias{clipmask}
 \title{Clip landscape raster by polygon or buffered point}
 \usage{
-clipmask(land, polygonID, polygons, outdir, idvar, overrast)
+clipmask(land, polygonID, polygons, outdir, idvar, overrast, na_value)
 }
 \arguments{
 \item{land}{landscape raster, passed from 'execute_landclip'}
@@ -18,6 +18,8 @@ clipmask(land, polygonID, polygons, outdir, idvar, overrast)
 \item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landclip'}
 
 \item{overrast}{Logical, should existing rasters with same filename be overwritten?}
+
+\item{navalue}{Numeric, to assign NA values in raster}
 }
 \description{
 Internal function that clip landscapes within 'execute_landclip', not to be called directly
