@@ -71,13 +71,14 @@ return(polygons)
 #'@param outdir Directory where .tif landscape clips are to be stored, do not include final backslash
 #'@param idvar Identifying variable name within feature shapefile to use for naming output rasters
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
+#'@param parallel execute landscape clips in parallel? (if yes requires set up of parallel environment)
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
 #' execute_landclip()
 #'
 #'
-execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast) {
+execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, parallel) {
   #check that output directory is valid
   if (!file.exists(outdir)){
     #create folder if the directory doesn't exist
@@ -96,7 +97,7 @@ execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast) {
   polygon_ids <- as.list(polygons[[idvar]])
 
 
-  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast)
+  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast, .parallel=parallel)
 
 }
 

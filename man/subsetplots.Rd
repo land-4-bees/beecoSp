@@ -9,13 +9,13 @@ subsetplots(points, cutoff)
 \arguments{
 \item{points}{Spatial points object of sites (sampling locations)}
 
-\item{cutoff}{Distance cutoff for independent samples (typically average foraging range of bee(s))}
+\item{cutoff}{Distance cutoff (in meters) for independent samples (typically average foraging range of bee(s))}
 }
 \description{
 Select sites that are separated by some minimum distance to ensure independence of bee communities
 }
 \details{
-Distance cutoff must be specified in the same units as projection of spatial points layer.
+Spatial points must lat/long (not projected). See 'distGeo' function (geosphere package) for details of distance calculation.
 }
 \examples{
 Usage example coming soon.

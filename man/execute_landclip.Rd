@@ -4,7 +4,7 @@
 \alias{execute_landclip}
 \title{Execute landscape clip and mask}
 \usage{
-execute_landclip(polygons, rasterpath, idvar, outdir, overrast)
+execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel)
 }
 \arguments{
 \item{polygons}{SpatialPolygonDataFrame of polygons to use to clip raster}
@@ -16,6 +16,8 @@ execute_landclip(polygons, rasterpath, idvar, outdir, overrast)
 \item{outdir}{Directory where .tif landscape clips are to be stored, do not include final backslash}
 
 \item{overrast}{Logical, should existing rasters with same filename be overwritten?}
+
+\item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)}
 }
 \description{
 Execute landscape clip and mask
