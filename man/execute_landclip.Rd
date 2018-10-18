@@ -5,7 +5,7 @@
 \title{Execute landscape clip and mask}
 \usage{
 execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel,
-  navalue)
+  na_value)
 }
 \arguments{
 \item{polygons}{SpatialPolygonDataFrame of polygons to use to clip raster}
@@ -20,7 +20,7 @@ execute_landclip(polygons, rasterpath, idvar, outdir, overrast, parallel,
 
 \item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)}
 
-\item{navalue}{Numeric, to assign NA values in raster}
+\item{na_value}{Numeric, to assign NA values in raster}
 }
 \description{
 Execute landscape clip and mask

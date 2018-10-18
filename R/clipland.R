@@ -7,7 +7,7 @@
 #'@param idvar Identifying variable name within feature shapefile, passed from 'execute_landclip'
 #'@param outdir Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
-#'@param navalue Numeric, to assign NA values in raster
+#'@param na_value Numeric, to assign NA values in raster
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
@@ -74,14 +74,14 @@ return(polygons)
 #'@param idvar Identifying variable name within feature shapefile to use for naming output rasters
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
 #'@param parallel execute landscape clips in parallel? (if yes requires set up of parallel environment)
-#'@param navalue Numeric, to assign NA values in raster
+#'@param na_value Numeric, to assign NA values in raster
 #'@keywords bees landscape ecology spatial
 #'@export
 #'@examples
 #' execute_landclip()
 #'
 #'
-execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, parallel, navalue) {
+execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, parallel, na_value) {
   #check that output directory is valid
   if (!file.exists(outdir)){
     #create folder if the directory doesn't exist
@@ -100,7 +100,7 @@ execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, para
   polygon_ids <- as.list(polygons[[idvar]])
 
 
-  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast, navalue=navalue, .parallel=parallel)
+  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast, na_value=na_value, .parallel=parallel)
 
 }
 

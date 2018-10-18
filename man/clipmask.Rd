@@ -19,7 +19,7 @@ clipmask(land, polygonID, polygons, outdir, idvar, overrast, na_value)
 
 \item{overrast}{Logical, should existing rasters with same filename be overwritten?}
 
-\item{navalue}{Numeric, to assign NA values in raster}
+\item{na_value}{Numeric, to assign NA values in raster}
 }
 \description{
 Internal function that clip landscapes within 'execute_landclip', not to be called directly
