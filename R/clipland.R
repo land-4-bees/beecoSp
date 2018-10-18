@@ -19,7 +19,7 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_valu
   onepoly <- polygons[polygons[[idvar]] == polygonID,]
   clip <- raster::crop(land, onepoly)
   mask <- raster::mask(clip, onepoly)
-  NAvalue(mask) <- na_value
+  raster::NAvalue(mask) <- na_value
   #store id variable for specific landscape raster
   nameraster <- as.character(onepoly[[idvar]])
 
