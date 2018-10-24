@@ -51,7 +51,7 @@ opts <- list(progress=progress)
 if (length(lands) > 1) {
   temp <- foreach::foreach(i=1:length(lands), .options.snow=opts, .packages = c('raster', 'rgdal')) %dopar%  {
     land <- raster::raster(lands[i])
-    dfn <- data.frame(table(values(land)))
+    dfn <- data.frame(table(values(land), useNA= 'ifany'))
     if (length(dfn) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
     names(dfn) <- c("VALUE", "Cell_Num")
 
