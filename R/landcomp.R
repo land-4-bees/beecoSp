@@ -18,7 +18,7 @@
 #outputs a .csv output file of landscape composition values of all input landscapes
 
 landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, attr_value, background=F, bgvalues=-1000) {
-
+library(foreach)
 raster::rasterOptions(tmptime=2)
 
 
