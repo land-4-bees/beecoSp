@@ -56,7 +56,7 @@ if (length(lands) > 1) {
     names(dfn) <- c("VALUE", "Cell_Num")
     if (background == T) {
       dfn <- dfn[!dfn$VALUE %in% bgvalues,]
-      if (length(dfn$VALUE == 0)) { stop (paste0('Landscape ', lands[i], "land cover contains only background values. Check raster file."))}
+      if (length(dfn$VALUE == 0)) { stop (paste0('Landscape ', basename(lands[i]), " land cover contains only background values. Check raster file."))}
     }
     dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
     dfn$Landscape <- gsub(basename(lands[i]), pattern='.tif', replacement="")
