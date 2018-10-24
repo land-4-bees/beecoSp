@@ -75,7 +75,7 @@ all <- plyr::rbind.fill(temp)
 NASS_attribute <- read.csv(attr_path)
 
 #add class names to data frame
-all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value)
+all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value, all.x=T)
 all$VALUE <- all$VALUE[drop=T]
 
 
