@@ -29,19 +29,11 @@ if (landdir==T) {
 if (landdir==F) {lands <- landfiles}
 
 #calculate landscape composition for first landscape
-land <- raster::raster(lands[1])
+land <- raster::raster(lands[72])
 
 df1 <- data.frame(table(values(land)))
 if (length(df1) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
 
-names(df1) <- c("VALUE", "Cell_Num")
-if (background == T) {
-  df1 <- df1[!df1$VALUE %in% bgvalues,]
-}
-df1$Pct_Land <- (df1$Cell_Num/sum(df1$Cell_Num))*100
-df1$Landscape <- gsub(basename(lands[1]), pattern='.tif', replacement="")
-
-all <- df1
 
 # Go parallel !!!
 
@@ -57,7 +49,7 @@ opts <- list(progress=progress)
 
 #loop over all other landscapes and merge composition files with first one
 if (length(lands) > 1) {
-  foreach::foreach(i=2:length(lands), .options.snow=opts, .packages = c('raster', 'rgdal')) %dopar%  {
+  temp <- foreach::foreach(i=1:length(lands), .options.snow=opts, .packages = c('raster', 'rgdal')) %dopar%  {
     land <- raster::raster(lands[i])
     dfn <- data.frame(table(values(land)))
     if (length(dfn) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
@@ -67,15 +59,18 @@ if (length(lands) > 1) {
     }
     dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
     dfn$Landscape <- gsub(basename(lands[i]), pattern='.tif', replacement="")
-    all <- rbind(dfn, all)
+    return(dfn)
   }
 }
 
 # stop clusters for parallelization
 parallel::stopCluster(cl)
 
+#convert data frames in list
+all <- plyr::rbind.fill(temp)
+
 #import NASS attribute table
-NASS_attribute <- read.delim(attr_path)
+NASS_attribute <- read.csv(attr_path)
 
 #add class names to data frame
 all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value)
