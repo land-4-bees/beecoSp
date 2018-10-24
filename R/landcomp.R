@@ -29,7 +29,7 @@ if (landdir==T) {
 if (landdir==F) {lands <- landfiles}
 
 #calculate landscape composition for first landscape
-land <- raster::raster(lands[72])
+land <- raster::raster(lands[1])
 
 df1 <- data.frame(table(values(land)))
 if (length(df1) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
@@ -54,6 +54,7 @@ if (length(lands) > 1) {
     dfn <- data.frame(table(values(land)))
     if (length(dfn) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
     names(dfn) <- c("VALUE", "Cell_Num")
+
     if (background == T) {
       dfn <- dfn[!dfn$VALUE %in% bgvalues,]
       #if (length(dfn$VALUE == 0)) { stop (paste0('Landscape', ' land cover contains only background values. Check raster files.'))}
