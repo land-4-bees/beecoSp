@@ -9,6 +9,8 @@
 #'@param background Logical, specify background value?
 #'@param bgvalues or NoData values to be excluded from total landscape area
 #'@keywords bees landscape ecology spatial
+#'@import foreach
+#'@import dplyr
 #'@export
 #'@examples
 #' Usage example coming soon.
@@ -18,7 +20,7 @@
 #outputs a .csv output file of landscape composition values of all input landscapes
 
 landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, attr_value, background=F, bgvalues=-1000) {
-library(foreach)
+
 raster::rasterOptions(tmptime=2)
 
 

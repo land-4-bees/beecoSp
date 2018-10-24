@@ -5,7 +5,7 @@
 \title{Calculate landscape percent land use, or any categorical raster}
 \usage{
 landcomp(landdir = T, landfiles, writeoutput = T, outfile, attr_path,
-  attr_value, background = NA, bgvalues)
+  attr_value, background = F, bgvalues = -1000)
 }
 \arguments{
 \item{landdir}{Logical specifying if 'landfiles' is a directory}
