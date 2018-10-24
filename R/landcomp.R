@@ -17,7 +17,7 @@
 #can specify a folder of landscapes (use landdir=T), or a list of landscape files
 #outputs a .csv output file of landscape composition values of all input landscapes
 
-landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, attr_value, background=NA, bgvalues) {
+landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, attr_value, background=F, bgvalues=-1000) {
 
 raster::rasterOptions(tmptime=2)
 
