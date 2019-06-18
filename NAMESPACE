@@ -3,6 +3,7 @@
 export(CDL_reclass)
 export(bufferproject)
 export(clipmask)
+export(distweight_lulc)
 export(execute_landclip)
 export(landcomp)
 export(subsetplots)
