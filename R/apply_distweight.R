@@ -32,10 +32,10 @@ apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path, attr
 
   #loop over all other landscapes and merge composition files with first one
   if (length(lands) > 1) {
-    temp <- foreach::foreach(i=1:length(lands), .options.snow=opts, .export=c('forage_range'),
-                             .packages = c('raster', 'rgdal')) %dopar%  {
+    temp <- foreach::foreach(i=c(1:length(lands)), .options.snow=opts, .packages = c('raster', 'rgdal', 'beecoSp')) %dopar%  {
       land <- raster::raster(lands[i])
-      dwt <- distweight_lulc(land_raster=land, forage_range=forage_range)
+      dwt <- beecoSp::distweight_lulc(land_raster=land, forage_range=forage_range)
+      dwt$Landscape <- gsub(basename(lands[i]), pattern='.tif', replacement="")
       return(dwt)
     }
 
@@ -49,10 +49,9 @@ apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path, attr
   NASS_attribute <- read.csv(attr_path)
 
   #add class names to data frame
-  all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value, all.x=T)
+  all <- merge(all, NASS_attribute, by.x="landcover_class", by.y=attr_value, all.x=T)
   all$VALUE <- all$VALUE[drop=T]
 
-
-
+  return(all)
   }
 }

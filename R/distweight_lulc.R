@@ -80,7 +80,7 @@ distweight_lulc <- function(land_raster, forage_range) {
   centroid <- sf::st_as_sf(centroid)
   land_name <- gsub(basename(land_raster@file@name), pattern='.tif', replacement = "")
   # write centroid to a shapefile
-  sf::st_write(centroid, paste0("centroid_point_",land_name, ".shp"), driver="ESRI Shapefile")
+  sf::st_write(centroid, paste0("centroid_point_",land_name, ".shp"), driver="ESRI Shapefile", delete_layer=T)
 
   #create buffer around center point, with radius equal to half of the moving window dimensions
   #add a small constant to radius of moving window to create odd number of pixels (one middle 'focal' cell)
