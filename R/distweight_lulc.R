@@ -16,7 +16,7 @@ distweight_lulc <- function(land_raster, forage_range) {
   mean_FR <- forage_range
 
   #read in land cover raster
-  hab.r <- raster::raster(land_raster)
+  hab.r <- land_raster
 
   #set a maximum foraging distance to be twice the foraging range
   #will be used later to determine size of moving window
@@ -74,18 +74,17 @@ distweight_lulc <- function(land_raster, forage_range) {
     warning('Centroid of raster was moved slightly to create raster with odd dimensions. Check that centroid point is in acceptable location for site it represents.')
   }
 
-  basename(land_raster)
+
   #change centroid to sf package format so can write to shapefile
   #writeOGR doesn't seem to work without attribute information
   centroid <- sf::st_as_sf(centroid)
-  land_name <- gsub(basename(land_raster), pattern='.tif', replacement = "")
+  land_name <- gsub(basename(land_raster@file@name), pattern='.tif', replacement = "")
   # write centroid to a shapefile
   sf::st_write(centroid, paste0("centroid_point_",land_name, ".shp"), driver="ESRI Shapefile")
 
   #create buffer around center point, with radius equal to half of the moving window dimensions
   #add a small constant to radius of moving window to create odd number of pixels (one middle 'focal' cell)
-  landpoly <- raster::buffer(centroid, width=(radius+1)*c.size) %>%
-              sf::st_as_sf()
+  landpoly <- sf::st_buffer(centroid, dist=(radius+1)*c.size)
 
   #crop land cover raster to 2x foraging distance (plus one extra middle focal cell)
   hab_crop <- crop(hab.r, landpoly, snap='in')
