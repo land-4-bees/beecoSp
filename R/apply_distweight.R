@@ -10,7 +10,7 @@
 #'@examples
 #' Usage example coming soon.
 
-apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path, attr_value) {
+apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path=NA, attr_value) {
 
   raster::rasterOptions(tmptime=2)
 
@@ -45,12 +45,14 @@ apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path, attr
   #convert data frames in list
   all <- plyr::rbind.fill(temp)
 
-  #import NASS attribute table
-  NASS_attribute <- read.csv(attr_path)
+  if (!is.na(attr_path)) {
+    #import NASS attribute table
+    NASS_attribute <- read.csv(attr_path)
 
-  #add class names to data frame
-  all <- merge(all, NASS_attribute, by.x="landcover_class", by.y=attr_value, all.x=T)
-  all$VALUE <- all$VALUE[drop=T]
+    #add class names to data frame
+    all <- merge(all, NASS_attribute, by.x="landcover_class", by.y=attr_value, all.x=T)
+    all$VALUE <- all$VALUE[drop=T]
+  }
 
   return(all)
   }
