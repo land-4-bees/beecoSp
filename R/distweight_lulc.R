@@ -74,7 +74,7 @@ distweight_lulc <- function(land_raster, forage_range) {
     warning('Centroid of raster was moved slightly to create raster with odd dimensions. Check that centroid point is in acceptable location for site it represents.')
   }
 
-  basename(landraster)
+  basename(land_raster)
   #change centroid to sf package format so can write to shapefile
   #writeOGR doesn't seem to work without attribute information
   centroid <- sf::st_as_sf(centroid)
