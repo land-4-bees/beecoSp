@@ -19,7 +19,7 @@
 #can specify a folder of landscapes (use landdir=T), or a list of landscape files
 #outputs a .csv output file of landscape composition values of all input landscapes
 
-landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path, attr_value, background=F, bgvalues=-1000) {
+landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path=NA, attr_value, background=F, bgvalues=-1000) {
 
 raster::rasterOptions(tmptime=2)
 
@@ -73,13 +73,14 @@ parallel::stopCluster(cl)
 #convert data frames in list
 all <- plyr::rbind.fill(temp)
 
-#import NASS attribute table
-NASS_attribute <- read.csv(attr_path)
+if (!is.na(attr_path)) {
+  #import NASS attribute table
+  NASS_attribute <- read.csv(attr_path)
 
-#add class names to data frame
-all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value, all.x=T)
-all$VALUE <- all$VALUE[drop=T]
-
+  #add class names to data frame
+  all <- merge(all, NASS_attribute, by.x="VALUE", by.y=attr_value, all.x=T)
+  all$VALUE <- all$VALUE[drop=T]
+}
 
 if (writeoutput==T) {
   write.csv(all, file=outfile)
