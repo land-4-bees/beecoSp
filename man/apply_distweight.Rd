@@ -4,13 +4,19 @@
 \alias{apply_distweight}
 \title{Calculate distance weighted land cover}
 \usage{
-apply_distweight(landdir = T, landfiles, forage_range, attr_path,
+apply_distweight(landdir = T, landfiles, forage_range, attr_path = NA,
   attr_value)
 }
 \arguments{
+\item{landdir}{Logical specifying if 'landfiles' is a directory}
+
+\item{landfiles}{Landscape raster files to process (path to directory or list of files)}
+
 \item{forage_range}{Mean foraging range of bee community of interest (determines shape of distance weighting curve)}
 
-\item{land_raster}{File path to land cover raster (centered on sampling location)}
+\item{attr_path}{Path to .csv file of raster attribute table}
+
+\item{attr_value}{Column name in attribute table that specifies raster values}
 }
 \description{
 Calculate distance weighted sum of raster classes, assuming middle pixel is focal cell.
@@ -18,7 +24,7 @@ Calculate distance weighted sum of raster classes, assuming middle pixel is foca
 \details{
 Distance weighting is an exponential decline function with a maximum distance of 'forage_range' *2.
 See Lonsdorf et al (2009) for details.
-'land_raster' must have a radius greater than 'forage_range'*2, but can be much larger (whole county). The raster used for distance weighting is cropped to radius of 'forage_range' times 2.
+Land cover rasters must have a radius greater than 'forage_range'*2, but can be much larger (whole county). The raster used for distance weighting is cropped to radius of 'forage_range' times 2.
 }
 \examples{
 Usage example coming soon.
