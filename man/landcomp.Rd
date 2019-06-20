@@ -2,7 +2,7 @@
 % Please edit documentation in R/landcomp.R
 \name{landcomp}
 \alias{landcomp}
-\title{Calculate landscape percent land use, or any categorical raster}
+\title{Calculate landscape composition (pct of each land cover type)}
 \usage{
 landcomp(landdir = T, landfiles, writeoutput = T, outfile,
   attr_path = NA, attr_value, background = F, bgvalues = -1000)
@@ -25,7 +25,10 @@ landcomp(landdir = T, landfiles, writeoutput = T, outfile,
 \item{bgvalues}{or NoData values to be excluded from total landscape area}
 }
 \description{
-Calculate landscape percent land use, or any categorical raster
+Calculate landscape composition (pct of each land cover type)
+}
+\details{
+This function can be used to calculate the number of cells and pct area covered for any categorical raster.
 }
 \examples{
 Usage example coming soon.

@@ -1,4 +1,4 @@
-#'Calculate landscape percent land use, or any categorical raster
+#'Calculate landscape composition (pct of each land cover type)
 #'
 #'@param landdir Logical specifying if 'landfiles' is a directory
 #'@param landfiles Landscape raster files to process (path to directory or list of files)
@@ -9,6 +9,7 @@
 #'@param background Logical, specify background value?
 #'@param bgvalues or NoData values to be excluded from total landscape area
 #'@keywords bees landscape ecology spatial
+#'@details This function can be used to calculate the number of cells and pct area covered for any categorical raster.
 #'@import foreach
 #'@import dplyr
 #'@export
