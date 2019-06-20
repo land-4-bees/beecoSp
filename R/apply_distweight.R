@@ -1,4 +1,14 @@
-
+#'Calculate distance weighted land cover
+#'
+#'Calculate distance weighted sum of raster classes, assuming middle pixel is focal cell.
+#'@param land_raster File path to land cover raster (centered on sampling location)
+#'@param forage_range Mean foraging range of bee community of interest (determines shape of distance weighting curve)
+#'@details Distance weighting is an exponential decline function with a maximum distance of 'forage_range' *2.
+#' See Lonsdorf et al (2009) for details.
+#' 'land_raster' must have a radius greater than 'forage_range'*2, but can be much larger (whole county). The raster used for distance weighting is cropped to radius of 'forage_range' times 2.
+#'@export
+#'@examples
+#' Usage example coming soon.
 
 apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path, attr_value) {
 
@@ -44,4 +54,5 @@ apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path, attr
 
 
 
+  }
 }
