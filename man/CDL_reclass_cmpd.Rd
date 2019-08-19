@@ -2,7 +2,7 @@
 % Please edit documentation in R/CDL_reclass_cmpd.R
 \name{CDL_reclass_cmpd}
 \alias{CDL_reclass_cmpd}
-\title{creates a state map of pesticide use for a particular compound by attributing pesticide use intensity (kg/ha) to land use/land cover in the Cropland Data Layer}
+\title{Reclassify land use raster into pesticide use intensity}
 \usage{
 CDL_reclass_cmpd(state, year, cmpd, from, to, writerast = F, meanreclass)
 }

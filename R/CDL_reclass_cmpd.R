@@ -1,3 +1,5 @@
+#'Reclassify land use raster into pesticide use intensity
+#'
 #'creates a state map of pesticide use for a particular compound by attributing pesticide use intensity (kg/ha) to land use/land cover in the Cropland Data Layer
 #'@param state name of state you want to reclassify (e.g. 'MD')
 #'@param year year of data you want to reclassify (e.g. 2012)
