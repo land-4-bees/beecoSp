@@ -96,11 +96,11 @@ distweight_lulc <- function(land_raster, forage_range) {
   #crop land cover raster to 2x foraging distance (plus one extra middle focal cell)
   hab_crop <- crop(hab.r, landpoly, snap='in')
 
-  # #create folder for clipped landscape composition rasters
-  # if (!file.exists("./site_clips_2xforage/")){
-  #   dir.create("./site_clips_2xforage/")
-  # }
-  # raster::writeRaster(hab_crop, paste0("./site_clips_2xforage/", land_name, ".tif"))
+  #create folder for clipped landscape composition rasters
+  if (!file.exists("./site_clips_2xforage/")){
+    dir.create("./site_clips_2xforage/")
+  }
+  raster::writeRaster(hab_crop, paste0("./site_clips_2xforage/", land_name, ".tif"), overwrite=T)
 
   #convert polygon to raster, assigning distance weighting values to new raster
   dist_rast <- raster::raster(effdist.v, template=hab_crop)
