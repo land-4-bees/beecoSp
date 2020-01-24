@@ -31,13 +31,7 @@ execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_v
 
   #store list of names of landscapes to be processed
   polygon_ids <- as.list(polygons[[idvar]])
-
-  if (!is.na(na_value)) {
   plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar,
               overrast=overrast, na_value=na_value)
-  } else {
-    plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar,
-                overrast=overrast)
-  }
 
 }
