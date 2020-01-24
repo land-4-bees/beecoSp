@@ -89,7 +89,7 @@ return(polygons)
 #' execute_landclip()
 #'
 #'
-execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_value) {
+execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_value=NA) {
   #check that output directory is valid
   if (!file.exists(outdir)){
     #create folder if the directory doesn't exist
@@ -108,7 +108,8 @@ execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_v
   polygon_ids <- as.list(polygons[[idvar]])
 
 
-  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar, overrast=overrast, na_value=na_value)
+  plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar,
+              overrast=overrast, na_value=na_value)
 
 }
 
