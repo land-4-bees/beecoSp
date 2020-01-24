@@ -80,13 +80,14 @@ distweight_lulc <- function(land_raster, forage_range) {
   centroid <- sf::st_as_sf(centroid)
   land_name <- gsub(basename(land_raster@file@name), pattern='.tif', replacement = "")
 
-  #create folder for centroids if it doesn't exist
-  if (!file.exists("./raster_centroids/")){
-    dir.create("./raster_centroids/")
-  }
-
-  # write centroid to a shapefile
-  sf::st_write(centroid, paste0("./raster_centroids/centroid_point_",land_name, ".shp"), driver="ESRI Shapefile", delete_layer=T)
+  # #create folder for centroids if it doesn't exist
+  # if (!file.exists("./raster_centroids/")){
+  #   dir.create("./raster_centroids/")
+  # }
+  #
+  # # write centroid to a shapefile
+  # sf::st_write(centroid, paste0("./raster_centroids/centroid_point_",land_name, ".shp"),
+  #              driver="ESRI Shapefile", delete_layer=T)
 
   #create buffer around center point, with radius equal to half of the moving window dimensions
   #add a small constant to radius of moving window to create odd number of pixels (one middle 'focal' cell)
@@ -95,11 +96,11 @@ distweight_lulc <- function(land_raster, forage_range) {
   #crop land cover raster to 2x foraging distance (plus one extra middle focal cell)
   hab_crop <- crop(hab.r, landpoly, snap='in')
 
-  #create folder for clipped landscape composition rasters
-  if (!file.exists("./site_clips_2xforage/")){
-    dir.create("./site_clips_2xforage/")
-  }
-  raster::writeRaster(hab_crop, paste0("./site_clips_2xforage/", land_name, ".tif"))
+  # #create folder for clipped landscape composition rasters
+  # if (!file.exists("./site_clips_2xforage/")){
+  #   dir.create("./site_clips_2xforage/")
+  # }
+  # raster::writeRaster(hab_crop, paste0("./site_clips_2xforage/", land_name, ".tif"))
 
   #convert polygon to raster, assigning distance weighting values to new raster
   dist_rast <- raster::raster(effdist.v, template=hab_crop)
