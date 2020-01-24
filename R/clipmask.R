@@ -30,7 +30,11 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_valu
   rasterpath <- paste(outdir, nameraster, sep="/")
 
   #write raster file as .tif to output directory
-  raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast, NAflag=na_value)
+  if (!is.na(na_value)) {
+    raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast, NAflag=na_value)
+  } else {
+    raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast)
+  }
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }
 
