@@ -14,12 +14,15 @@
 #'see 'execute_landclip' for usage example.
 
 #clip and mask landscape raster from polygon, export as .tif file
-clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_value){
+clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_value=NA){
   #subset 'polygons' layer to just polygon that matches ID of specific row
   onepoly <- polygons[polygons[[idvar]] == polygonID,]
   clip <- raster::crop(land, onepoly)
   mask <- raster::mask(clip, onepoly)
-  raster::NAvalue(mask) <- na_value
+
+  if (!is.na(na_value)) {
+    raster::NAvalue(mask) <- na_value
+  }
   #store id variable for specific landscape raster
   nameraster <- as.character(onepoly[[idvar]])
 
@@ -27,7 +30,12 @@ clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_valu
   rasterpath <- paste(outdir, nameraster, sep="/")
 
   #write raster file as .tif to output directory
-  raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast, NAflag=na_value)
+  if (!is.na(na_value)) {
+    raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast, NAflag=na_value)
+  } else {
+    raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast)
+
+  }
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }
 
