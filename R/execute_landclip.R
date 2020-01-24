@@ -14,7 +14,7 @@
 #' execute_landclip()
 #'
 #'
-execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_value) {
+execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_value=NA) {
   #check that output directory is valid
   if (!file.exists(outdir)){
     #create folder if the directory doesn't exist
