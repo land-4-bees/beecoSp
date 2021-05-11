@@ -9,7 +9,7 @@ apply_distweight(
   landfiles,
   forage_range,
   attr_path = NA,
-  attr_value
+  attr_value = NA
 )
 }
 \arguments{
