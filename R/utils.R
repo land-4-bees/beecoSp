@@ -5,6 +5,7 @@
 #' @name %>%
 #' @rdname pipe
 #' @keywords internal
+#' @noRd
 #' @importFrom magrittr %>%
 #' @importFrom foreach %dopar%
 NULL

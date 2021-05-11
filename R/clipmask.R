@@ -1,6 +1,6 @@
 #'Clip landscape raster by polygon or buffered point
 #'
-#'Internal function that clip landscapes within 'execute_landclip', not to be called directly
+#'Internal function that clips landscapes within 'execute_landclip', not to be called directly
 #'@param polygonID id of specific polygon used for clip and mask
 #'@param land landscape raster, passed from 'execute_landclip'
 #'@param polygons SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landclip'

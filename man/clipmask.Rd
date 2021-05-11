@@ -22,7 +22,7 @@ clipmask(land, polygonID, polygons, outdir, idvar, overrast, na_value = NA)
 \item{na_value}{Numeric, to assign NA values in raster}
 }
 \description{
-Internal function that clip landscapes within 'execute_landclip', not to be called directly
+Internal function that clips landscapes within 'execute_landclip', not to be called directly
 }
 \examples{
 see 'execute_landclip' for usage example.
