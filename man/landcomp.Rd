@@ -4,8 +4,16 @@
 \alias{landcomp}
 \title{Calculate landscape composition (pct of each land cover type)}
 \usage{
-landcomp(landdir = T, landfiles, writeoutput = T, outfile,
-  attr_path = NA, attr_value, background = F, bgvalues = -1000)
+landcomp(
+  landdir = T,
+  landfiles,
+  writeoutput = T,
+  outfile,
+  attr_path = NA,
+  attr_value,
+  background = F,
+  bgvalues = -1000
+)
 }
 \arguments{
 \item{landdir}{Logical specifying if 'landfiles' is a directory}

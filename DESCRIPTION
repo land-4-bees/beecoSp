@@ -8,9 +8,14 @@ Description: Custom spatial functions for bee landscape ecology
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: raster,
+Imports: 
+    raster,
     rgdal,
     rgeos,
     plyr,
-	doParallel
-RoxygenNote: 6.1.1
+    doParallel,
+    terra,
+    future,
+    foreach,
+    logger
+RoxygenNote: 7.1.1

@@ -1,6 +1,6 @@
 #'Calculate distance weighted land cover
 #'
-#'Calculate distance weighted sum of raster classes, assuming middle pixel is focal cell.
+#'Apply 'distweight_lulc' function over several rasters to calculate distance weighted sum of raster classes.
 #'@param landdir Logical specifying if 'landfiles' is a directory
 #'@param landfiles Landscape raster files to process (path to directory or list of files)
 #'@param forage_range Mean foraging range of bee community of interest (determines shape of distance weighting curve)

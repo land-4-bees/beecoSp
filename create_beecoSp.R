@@ -11,15 +11,19 @@ library(roxygen2)
 #check and make sure working directory is set correctly
 getwd()
 
-#setwd("D:/Documents/Land4Bees/beecoSp")
+setwd("Z:/SoftwareDevelopment/beecoSp")
 #create and name R package (do not run again)
 #create("beecoSp")
 
 #add package dependencies
-devtools::use_package("raster")
-devtools::use_package("rgdal")
-devtools::use_package("rgeos")
-devtools::use_package("plyr")
+usethis::use_package("raster")
+usethis::use_package("terra")
+usethis::use_package("rgdal")
+usethis::use_package("rgeos")
+usethis::use_package("plyr")
+usethis::use_package("future")
+usethis::use_package("foreach")
+usethis::use_package("logger")
 #updated 'description file'
 
 
@@ -27,12 +31,12 @@ devtools::use_package("plyr")
 devtools::load_all()
 devtools::document()
 
-#add sample data
-devtools::use_data(ny_landuse, ny_samplesites)
+# #add sample data
+# devtools::use_data(ny_landuse, ny_samplesites)
 
 
 #install package locally
-setwd("D:/Documents/Land4Bees")
+setwd("Z:/SoftwareDevelopment")
 devtools::install("beecoSp")
 
 

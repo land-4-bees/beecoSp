@@ -1,4 +1,4 @@
-#'Buffer and reproject input points or polygons
+#'Buffer and re-project input points or polygons
 #'
 #'Clip landscape raster by polygon or buffered point features
 #'@param rasterpath Full path name for landscape raster file

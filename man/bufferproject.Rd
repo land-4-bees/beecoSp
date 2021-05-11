@@ -2,19 +2,13 @@
 % Please edit documentation in R/bufferproject.R, R/clipland.R
 \name{bufferproject}
 \alias{bufferproject}
-\title{Buffer and reproject input points or polygons}
+\title{Buffer and re-project input points or polygons}
 \usage{
 bufferproject(rasterpath, featurepath, bufferdist = NA)
 
 bufferproject(rasterpath, featurepath, bufferdist = NA)
 }
 \arguments{
-\item{rasterpath}{Full path name for landscape raster file}
-
-\item{featurepath}{Full path name for point shapefile}
-
-\item{bufferdist}{Radius of desired landscape buffer in meters}
-
 \item{rasterpath}{Full path name for landscape raster file}
 
 \item{featurepath}{Full path name for point shapefile}

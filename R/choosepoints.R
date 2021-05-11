@@ -1,4 +1,4 @@
-#'Subset sites based on proximity
+#'Filter sites to random subset based on proximity
 #'
 #'Select sites that are separated by some minimum distance to ensure independence of bee communities
 #'@param points Spatial points object of sites (sampling locations)

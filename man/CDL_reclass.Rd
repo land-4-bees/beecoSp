@@ -4,8 +4,15 @@
 \alias{CDL_reclass}
 \title{Reclassify land use raster}
 \usage{
-CDL_reclass(rasterpath, reclasstable, from, to, writerast = F, outpath,
-  meanreclass)
+CDL_reclass(
+  rasterpath,
+  reclasstable,
+  from,
+  to,
+  writerast = F,
+  outpath,
+  meanreclass
+)
 }
 \arguments{
 \item{rasterpath}{file path of land use raster file}

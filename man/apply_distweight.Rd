@@ -4,8 +4,13 @@
 \alias{apply_distweight}
 \title{Calculate distance weighted land cover}
 \usage{
-apply_distweight(landdir = T, landfiles, forage_range, attr_path = NA,
-  attr_value)
+apply_distweight(
+  landdir = T,
+  landfiles,
+  forage_range,
+  attr_path = NA,
+  attr_value
+)
 }
 \arguments{
 \item{landdir}{Logical specifying if 'landfiles' is a directory}
@@ -19,7 +24,7 @@ apply_distweight(landdir = T, landfiles, forage_range, attr_path = NA,
 \item{attr_value}{Column name in attribute table that specifies raster values}
 }
 \description{
-Calculate distance weighted sum of raster classes, assuming middle pixel is focal cell.
+Apply 'distweight_lulc' function over several rasters to calculate distance weighted sum of raster classes.
 }
 \details{
 Distance weighting is an exponential decline function with a maximum distance of 'forage_range' *2.

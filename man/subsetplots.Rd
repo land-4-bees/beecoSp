@@ -2,7 +2,7 @@
 % Please edit documentation in R/choosepoints.R
 \name{subsetplots}
 \alias{subsetplots}
-\title{Subset sites based on proximity}
+\title{Filter sites to random subset based on proximity}
 \usage{
 subsetplots(points, cutoff)
 }

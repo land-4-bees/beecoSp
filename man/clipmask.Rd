@@ -22,20 +22,6 @@ clipmask(land, polygonID, polygons, outdir, idvar, overrast, na_value)
 \item{overrast}{Logical, should existing rasters with same filename be overwritten?}
 
 \item{na_value}{Numeric, to assign NA values in raster}
-
-\item{polygonID}{id of specific polygon used for clip and mask}
-
-\item{land}{landscape raster, passed from 'execute_landclip'}
-
-\item{polygons}{SpatialPolygonDataFrame of polygons to clip, passed from 'execute_landclip'}
-
-\item{idvar}{Identifying variable name within feature shapefile, passed from 'execute_landclip'}
-
-\item{outdir}{Directory where .tif landscape clips are to be stored, passed from 'execute_landclip'}
-
-\item{overrast}{Logical, should existing rasters with same filename be overwritten?}
-
-\item{na_value}{Numeric, to assign NA values in raster}
 }
 \description{
 Internal function that clip landscapes within 'execute_landclip', not to be called directly

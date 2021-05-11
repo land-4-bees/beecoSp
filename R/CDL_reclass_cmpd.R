@@ -10,7 +10,6 @@
 #'@param outpath if writerast is TRUE, path name where reclass raster should be written
 #'@param meanreclass logical, return mean value of reclassified raster
 #'@details This function is a wrapper for beecoSp's 'CDL_reclass' specific to reclassifying state maps into pesticide use intensity.
-#'@export
 #'
 
 CDL_reclass_cmpd <- function(state, year, cmpd, from, to, writerast=F, meanreclass) {

@@ -22,20 +22,6 @@ execute_landclip(polygons, rasterpath, idvar, outdir, overrast, na_value)
 \item{na_value}{Numeric, to assign NA values in raster}
 
 \item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)}
-
-\item{polygons}{SpatialPolygonDataFrame of polygons to use to clip raster}
-
-\item{rasterpath}{Full path name for landscape raster file}
-
-\item{outdir}{Directory where .tif landscape clips are to be stored, do not include final backslash}
-
-\item{idvar}{Identifying variable name within feature shapefile to use for naming output rasters}
-
-\item{overrast}{Logical, should existing rasters with same filename be overwritten?}
-
-\item{parallel}{execute landscape clips in parallel? (if yes requires set up of parallel environment)}
-
-\item{na_value}{Numeric, to assign NA values in raster}
 }
 \description{
 Execute landscape clip and mask

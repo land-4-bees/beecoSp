@@ -9,7 +9,6 @@
 #'@param overrast Logical, should existing rasters with same filename be overwritten?
 #'@param na_value Numeric, to assign NA values in raster
 #'@keywords bees landscape ecology spatial
-#'@export
 #'@examples
 #'see 'execute_landclip' for usage example.
 
