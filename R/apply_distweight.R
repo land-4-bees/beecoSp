@@ -13,7 +13,7 @@
 #'@examples
 #' Usage example coming soon.
 
-apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path=NA, attr_value) {
+apply_distweight <- function(landdir=T, landfiles, forage_range, attr_path=NA, attr_value=NA) {
 
   raster::rasterOptions(tmptime=2)
 
