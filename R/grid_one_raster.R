@@ -106,7 +106,8 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
     # set up parallel processing cluster
     cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
-    parallel::clusterExport(cl=cl, envir=environment(), varlist=c('region_raster'))
+    parallel::clusterExport(cl=cl, envir=environment(),
+                            varlist=c('raster_tiles', 'tiledir', 'rasterID'))
     doParallel::registerDoParallel(cl)  # register the parallel backend
 
     # exclude tiles that are all NA values for BOTH layers

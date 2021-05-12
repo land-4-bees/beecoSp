@@ -166,7 +166,9 @@ grid_rasters <- function(rasterpath, rasterID,
 
     # set up parallel processing cluster
     cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
-    parallel::clusterExport(cl=cl, envir=environment(), varlist=c('region_cdl', 'region_nvc'))
+    parallel::clusterExport(cl=cl, envir=environment(),
+                      varlist=c('cdl_tiles', 'nvc_tiles', 'tiledir', 'rasterID'))
+
     doParallel::registerDoParallel(cl)  # register the parallel backend
 
 
