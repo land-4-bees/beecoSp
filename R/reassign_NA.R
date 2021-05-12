@@ -18,14 +18,14 @@ reassign_NA <- function(map, window_size, replace_any=F) {
     if (replace_any == T) {
 
       #use regular mode function
-      pooey <- terra::focal(smaller_test, na.only=T, w=window_size, fun='modal',
+      pooey <- terra::focal(map, na.only=T, w=window_size, fun='modal',
                             na.rm=T)
 
     } else if (replace_any == F) {
 
       #use custom function, but specify which classes can be returned as the mode.
       #If the allowed classes don't exist, return -1001
-      pooey <- terra::focal(smaller_test, na.only=T, w=window_size, fun='custom_modal',
+      pooey <- terra::focal(map, na.only=T, w=window_size, fun='custom_modal',
                             na.rm=T)
     }
 
