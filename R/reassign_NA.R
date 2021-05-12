@@ -12,9 +12,6 @@
 
 reassign_NA <- function(map, window_size, replace_any=F) {
 
-  # specify allow_classes is a global variable (necessary for futures package to work)
-  allow_classes
-
     if (replace_any == T) {
 
       #use regular mode function
