@@ -26,11 +26,11 @@ grid_rasters(
 
 \item{buffercells}{number of cells overlapping between adjacent tiles}
 
+\item{NAvalues}{No data or background values of input rasters}
+
 \item{writetiles}{logical, write tiles as directory of .tif files?}
 
 \item{tiledir}{path to directory where output tiles should be saved}
-
-\item{NAvalue}{No data or background values of input rasters}
 }
 \value{
 A list of raster tiles. Each element of the list is a pair of raster tiles (one tile for each of the two input raster).

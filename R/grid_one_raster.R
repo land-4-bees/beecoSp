@@ -14,6 +14,8 @@
 #'@details
 #'NAvalue parameter is used to identify raster tiles that are all background (e.g. areas of open water). These background tiles are excluded from list of output tiles and tile directory.
 #'@export
+#'@import logger
+
 #'@examples
 #'example forthcoming.
 
