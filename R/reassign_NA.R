@@ -17,7 +17,7 @@ reassign_NA <- function(map, window_size, replace_any=F) {
 
     if (replace_any == T) {
 
-      #use custom function, but specify which classes can be returned as the mode.
+      #use regular mode function
       pooey <- terra::focal(smaller_test, na.only=T, w=window_size, fun='modal',
                             na.rm=T)
 
@@ -36,7 +36,6 @@ reassign_NA <- function(map, window_size, replace_any=F) {
 custom_modal <- function(x, na.rm, ...) {
 
   # retrieve list of allowable classes from the global environment
-
   allow_classes <- get('allow_classes', pryr::where('allow_classes'))
 
   if (any(x %in% allow_classes)) {
