@@ -18,22 +18,26 @@ reassign_NA <- function(map, window_size, replace_any=F) {
     if (replace_any == T) {
 
       #use regular mode function
-      pooey <- terra::focal(map, na.only=T, w=window_size, fun='modal',
-                            na.rm=T)
+      pooey <- terra::focal(x=map, na.only=T, w=window_size, fun='modal',na.rm=T)
 
     } else if (replace_any == F) {
 
       #use custom function, but specify which classes can be returned as the mode.
       #If the allowed classes don't exist, return -1001
-      pooey <- terra::focal(map, na.only=T, w=window_size, fun='custom_modal',
-                            na.rm=T)
+      pooey <- terra::focal(x=map, na.only=T, w=window_size, fun=beecoSp::custom_modal, na.rm=T)
     }
 
   return(pooey)
 }
 
-# function to identify the most common raster class with a set of allowed classes (e.g. most common agricultural class)
-custom_modal <- function(x, na.rm, ...) {
+#'Mode function that calculates mode of specific raster classes
+#'
+#'Function to identify the most common raster class with a set of allowed classes (e.g. most common agricultural class)
+#'@param x input raster file
+#'@export
+#'@keywords bees landscape ecology spatial
+
+custom_modal <- function(x, ...) {
 
   # retrieve list of allowable classes from the global environment
   allow_classes <- get('allow_classes', pryr::where('allow_classes'))
