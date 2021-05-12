@@ -1,12 +1,14 @@
 #' Split regional or national raster into gridded tiles
 #'
 #'@param rasterpath file path of input raster file
-#'@param regionalextent optional, vector of state names to crop national raster to region of interest
 #'@param rasterID text string to identify output tiles (e.g. CDL for NASS Cropland Data Layer)
+#'@param regionalextent optional, vector of state names to crop national raster to region of interest
 #'@param div division factor specifying the number of tiles in x and y dimensions
 #'@param buffercells number of cells overlapping between adjacent tiles
 #'@param NAvalue No data or background value of input raster
 #'@param writetiles logical, write tiles as directory of .tif files?
+#'@param tiledir path to directory where output tiles should be saved
+
 #'@return A list of raster tiles.
 #'@keywords bees landscape ecology spatial
 #'@details
@@ -15,9 +17,9 @@
 #'@examples
 #'example forthcoming.
 
-grid_one_raster <- function(rasterpath, regionalextent=NA, rasterID,
-                         tile_dir, div, buffercells=c(0,0),
-                         NAvalue, writetiles = T, ...) {
+grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
+                         div, buffercells=c(0,0),
+                         NAvalue, writetiles = T, tiledir...) {
 
   ######################################################################################################
   ##### Part 1: Setup and load data
@@ -42,11 +44,6 @@ grid_one_raster <- function(rasterpath, regionalextent=NA, rasterID,
 
   ######################################################################################################
   ##### Part 2: Crop national raster(s) to regional extent
-
-  # create directory for output files if it doesn't already exist
-  if (!dir.exists(tile_dir)) {
-    dir.create(tile_dir)
-  }
 
   # read input raster and crop to extent of provided shapefile
   # use the terra package because it is faster than raster.
@@ -92,9 +89,14 @@ grid_one_raster <- function(rasterpath, regionalextent=NA, rasterID,
   if (writetiles == T) {
     logger::log_info('Writing output tiles.')
 
+    # create directory for output files if it doesn't already exist
+    if (!dir.exists(tiledir)) {
+      dir.create(tiledir)
+    }
+
     #create folder for tile output if it doesn't already exist
-    if (!dir.exists(paste0(tile_dir, "/", rasterID))) {
-      dir.create(paste0(tile_dir, "/", rasterID))
+    if (!dir.exists(paste0(tiledir, "/", rasterID))) {
+      dir.create(paste0(tiledir, "/", rasterID))
     }
 
     # set up parallel processing cluster
@@ -105,7 +107,7 @@ grid_one_raster <- function(rasterpath, regionalextent=NA, rasterID,
     # exclude tiles that are all NA values for BOTH layers
     foreach::foreach(i= which(!(todiscard_tiles))) %dopar% {
 
-      raster::writeRaster(raster_tiles[[i]], paste0(tile_dir, "/", rasterID, "/", rasterID,"_Tile", i, ".tif"), overwrite=T)
+      raster::writeRaster(raster_tiles[[i]], paste0(tiledir, "/", rasterID, "/", rasterID,"_Tile", i, ".tif"), overwrite=T)
     }
   }
 

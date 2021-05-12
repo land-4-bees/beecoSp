@@ -6,8 +6,7 @@
 #'@param yrs = vector of years (integers) to include
 #'@param landuse = input file with CDL values and crop names
 #'@param outpath = file path to write reclass keys
-#'@examples
-#'See Insert link to Maggie's github site here!
+
 
 cmpd_keys <- function(pestpath, cmpd, states, yrs, landuse, outpath){
   landuse <- read.csv(landuse) %>%
