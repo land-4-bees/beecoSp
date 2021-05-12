@@ -38,10 +38,13 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
     # download shapefile of US states
     region <- tigris::states() %>% dplyr::filter(NAME %in% regionalextent) %>%
-      sf::st_transform(crs = sf::st_crs(temp_raster)) # re-project polygon layer to match raster1
+      sf::st_transform(crs = sf::st_crs(temp_raster)) %>% # re-project polygon layer to match raster1
+      terra::vect(
 
+      )
   } else if ('sf' %in% class(regionalextent)) {
-    region <- sf::st_transform(regionalextent, crs = sf::st_crs(temp_raster))
+    region <- sf::st_transform(regionalextent, crs = sf::st_crs(temp_raster)) %>%
+      terra::vect()
   }
 
   ######################################################################################################
