@@ -4,6 +4,7 @@
 #'@param map input raster file
 #'@param window_size diameter of moving window, including the focal cell
 #'@param replace_any logical, can NA values be filled with any other raster class?
+#'@export
 #'@keywords bees landscape ecology spatial
 #'@details
 #' window_size of parameter includes the focal cell. For example, a window size of 5 would include 2 cells in each direction from the focal cell.
