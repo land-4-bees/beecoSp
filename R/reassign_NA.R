@@ -29,7 +29,7 @@ reassign_NA <- function(map, window_size, replace_any=F) {
 
 #'Mode function that calculates mode of specific raster classes
 #'
-#'Function to identify the most common raster class with a set of allowed classes (e.g. most common agricultural class)
+#'Function to identify the most common raster class of a set of allowed classes (e.g. most common agricultural class)
 #'@param x input raster file
 #'@export
 #'@keywords bees landscape ecology spatial

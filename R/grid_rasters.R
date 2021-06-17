@@ -28,7 +28,7 @@ grid_rasters <- function(rasterpath, rasterID,
   ######################################################################################################
   ##### Part 1: Setup and load data
 
-  # lOad libraries
+  # load libraries
   library(future); library(foreach)
 
   #separate file paths to CDL and vegetation rasters.
@@ -38,6 +38,17 @@ grid_rasters <- function(rasterpath, rasterID,
   #set up logger to write status updates
   library(logger)
   logger::log_threshold(DEBUG)
+
+  # create directories for output files if they don't already exist
+  if (!dir.exists(tiledir)) {
+    dir.create(tiledir)
+  }
+
+  #create CDL and NVC tile folders if they don't already exist
+  if (!dir.exists(paste0(tiledir, "/", rasterID[1]))) {
+    dir.create(paste0(tiledir, "/", rasterID[1]))
+    dir.create(paste0(tiledir, "/", rasterID[2]))
+  }
 
   # load raster1
   # We will use raster object to re-project state polygons
@@ -142,11 +153,6 @@ grid_rasters <- function(rasterpath, rasterID,
     # write mis-matched rasters as .tif files
     for (i in which(todiscard_cdl != todiscard_nvc)) {
 
-      # create directory for output files if it doesn't already exist
-      if (!dir.exists(tiledir)) {
-        dir.create(tiledir)
-      }
-
       raster::writeRaster(cdl_tiles[[i]], paste0(tiledir, "/MismatchedBorderTiles/", rasterID[1],
                                                    "Tile", i, ".tif"), overwrite=T)
       if (!is.na(veg_path)) {
@@ -176,12 +182,6 @@ grid_rasters <- function(rasterpath, rasterID,
 
     # exclude tiles that are all NA values for BOTH layers
     foreach::foreach(i= which(!(todiscard_nvc&todiscard_cdl))) %dopar% {
-
-      #create CDL and NVC tile folders if they don't already exist
-      if (!dir.exists(paste0(tiledir, "/", rasterID[1]))) {
-        dir.create(paste0(tiledir, "/", rasterID[1]))
-        dir.create(paste0(tiledir, "/", rasterID[2]))
-      }
 
       raster::writeRaster(cdl_tiles[[i]], paste0(tiledir, "/", rasterID[1], "/", rasterID[1], "_Tile", i, ".tif"), overwrite=T)
       raster::writeRaster(nvc_tiles[[i]], paste0(tiledir, "/", rasterID[2], "/", rasterID[2], "_Tile", i, ".tif"), overwrite=T)
