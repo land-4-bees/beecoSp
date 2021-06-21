@@ -10,7 +10,7 @@ custom_modal(x, ...)
 \item{x}{input raster file}
 }
 \description{
-Function to identify the most common raster class with a set of allowed classes (e.g. most common agricultural class)
+Function to identify the most common raster class of a set of allowed classes (e.g. most common agricultural class)
 }
 \keyword{bees}
 \keyword{ecology}
