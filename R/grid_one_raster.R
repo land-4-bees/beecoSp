@@ -66,7 +66,7 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
   # read input raster and crop to extent of provided shapefile
   # use the terra package because it is faster than raster.
-  if (!is.na(regionalextent)) {
+  if (!any(is.na(regionalextent))) {
 
     logger::log_info('Cropping national raster to shapefile extent (if regionalextent is provided).')
 
