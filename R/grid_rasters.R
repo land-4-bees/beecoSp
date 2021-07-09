@@ -56,7 +56,7 @@ grid_rasters <- function(rasterpath, rasterID,
 
   # if necessary, download polygon layer of state boundaries
   if (!any(is.na(regionalextent)) & is.character(regionalextent)) {
-    logger::log_info('Re-projecting regional shapefile to match CDL raster.')
+    logger::log_info('Re-projecting shapefile to match CDL raster.')
 
     # download shapefile of US states
     region <- tigris::states() %>% dplyr::filter(NAME %in% regionalextent) %>%
@@ -96,8 +96,8 @@ grid_rasters <- function(rasterpath, rasterID,
   ######################################################################################################
   ##### Part 3: Split raster1 into tiles
 
-  logger::log_info('Splitting regional rasters into specified number of tiles (n = xdiv * ydiv).')
-
+  logger::log_info('Splitting rasters into specified number of tiles (n = xdiv * ydiv).')
+  logger::log_info('Splitting first raster.')
 
   # set up parallel processing cluster (will be used by splitRaster function)
   cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
@@ -110,6 +110,7 @@ grid_rasters <- function(rasterpath, rasterID,
 
   ######################################################################################################
   ##### Part 4: If raster2 file path is provided, split raster2 into tiles
+  logger::log_info('Splitting second raster.')
 
   nvc_tiles <- SpaDES.tools::splitRaster(r=region_nvc, nx=div[1], ny=div[2],
                                          buffer=buffercells, cl=cl)
@@ -120,6 +121,8 @@ grid_rasters <- function(rasterpath, rasterID,
   # save lists of which raster tiles are all NA values (cdl == 0 & nvc == -9999)
   # We don't need to process raster tiles that are completely NA values (background)
   # I use the purrr map function because it nicely applies a function over a list, which is the format returned by splitRaster
+
+  logger::log_info('Identifying raster tiles that are all NA values.')
 
   #turn on parallel processing for furrr package
   future::plan(multisession)
@@ -167,13 +170,13 @@ grid_rasters <- function(rasterpath, rasterID,
                                .y= purrr::discard(nvc_tiles, todiscard_nvc&todiscard_cdl), .f=c)
 
   ######################################################################################################
-  ##### Part 5: Write tiles as individual .tif files
+  ##### Part 6: Write tiles as individual .tif files
 
   if (writetiles == T) {
     logger::log_info('Writing output tiles.')
 
     # set up parallel processing cluster
-    cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
+    cl <- parallel::makeCluster(parallel::detectCores())  # use all but 2 cores
     parallel::clusterExport(cl=cl, envir=environment(),
                       varlist=c('cdl_tiles', 'nvc_tiles', 'tiledir', 'rasterID'))
 

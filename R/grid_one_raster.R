@@ -21,34 +21,48 @@
 
 grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
                          div, buffercells=c(0,0),
-                         NAvalue, writetiles = T, tiledir...) {
+                         NAvalue, writetiles = T, tiledir) {
 
   ######################################################################################################
   ##### Part 1: Setup and load data
 
+  # load libraries
+  library(future); library(foreach)
+
   #set up logger to write status updates
+  library(logger)
   logger::log_threshold(DEBUG)
 
-  # load raster. We will use raster object to re-project state polygons
-  temp_raster <- raster::raster(rasterpath)
+  # create directories for output files if they don't already exist
+  if (!dir.exists(tiledir)) {
+    dir.create(tiledir)
+  }
+
+  #create CDL and NVC tile folders if they don't already exist
+  if (!dir.exists(paste0(tiledir, "/", rasterID[1]))) {
+    dir.create(paste0(tiledir, "/", rasterID[1]))
+  }
+
+  # load raster1
+  # We will use raster object to re-project state polygons
+  input_raster <- raster::raster(rasterpath)
 
   # if necessary, download polygon layer of state boundaries
   if (!any(is.na(regionalextent)) & is.character(regionalextent)) {
-    logger::log_info('Re-projecting regional shapefile to match raster.')
+    logger::log_info('Re-projecting shapefile to match CDL raster.')
 
     # download shapefile of US states
     region <- tigris::states() %>% dplyr::filter(NAME %in% regionalextent) %>%
-      sf::st_transform(crs = sf::st_crs(temp_raster)) %>% # re-project polygon layer to match raster1
-      terra::vect(
+      sf::st_transform(crs = sf::st_crs(input_raster)) %>% # re-project polygon layer to match raster1
+      terra::vect()
 
-      )
   } else if ('sf' %in% class(regionalextent)) {
-    region <- sf::st_transform(regionalextent, crs = sf::st_crs(temp_raster)) %>%
+    region <- sf::st_transform(regionalextent, crs = sf::st_crs(input_raster)) %>%
       terra::vect()
   }
 
   ######################################################################################################
-  ##### Part 2: Crop national raster(s) to regional extent
+  ##### Part 2: Crop national raster to regional extent
 
   # read input raster and crop to extent of provided shapefile
   # use the terra package because it is faster than raster.
@@ -67,7 +81,7 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
   logger::log_info('Splitting regional raster into specified number of tiles (n = xdiv * ydiv).')
 
   # set up parallel processing cluster (will be used by splitRaster function)
-  cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
+  cl <- parallel::makeCluster(parallel::detectCores())  # use all but 2 cores
 
   # split raster1 into tiles using a regular grid
   raster_tiles <- SpaDES.tools::splitRaster(r=region_raster, nx=div[1], ny=div[2],
@@ -76,9 +90,9 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
   ######################################################################################################
   ##### Part 5: Handle background tiles that are all NA
 
-  # save list of raster tiles are all NA values (raster == NA_value)
-  # don't process raster tiles that are completely NA values (background)
-  # use the 'map' function because it applies a function over a list, which is the format returned by splitRaster
+  # save lists of which raster tiles are all NA values (cdl == 0 )
+  # We don't need to process raster tiles that are completely NA values (background)
+  # I use the purrr map function because it nicely applies a function over a list, which is the format returned by splitRaster
 
   #turn on parallel processing for furrr package
   future::plan(multisession)
@@ -88,24 +102,18 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
     raster::cellStats(x, stat=max) == NAvalue },
     .options = furrr::furrr_options(seed = TRUE)) %>% unlist()
 
+  # make list object of raster tiles to return (non-NA values in one or more raster layers)
+  raster_tiles <- raster_tiles[!todiscard_tiles]
+
   ######################################################################################################
   ##### Part 6: Write tiles as individual .tif files
 
   if (writetiles == T) {
     logger::log_info('Writing output tiles.')
 
-    # create directory for output files if it doesn't already exist
-    if (!dir.exists(tiledir)) {
-      dir.create(tiledir)
-    }
-
-    #create folder for tile output if it doesn't already exist
-    if (!dir.exists(paste0(tiledir, "/", rasterID))) {
-      dir.create(paste0(tiledir, "/", rasterID))
-    }
 
     # set up parallel processing cluster
-    cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
+    cl <- parallel::makeCluster(parallel::detectCores())  # use all cores
     parallel::clusterExport(cl=cl, envir=environment(),
                             varlist=c('raster_tiles', 'tiledir', 'rasterID'))
     doParallel::registerDoParallel(cl)  # register the parallel backend
