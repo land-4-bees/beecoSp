@@ -99,21 +99,48 @@ grid_rasters <- function(rasterpath, rasterID,
   logger::log_info('Splitting rasters into specified number of tiles (n = xdiv * ydiv).')
   logger::log_info('Splitting first raster.')
 
-  # set up parallel processing cluster (will be used by splitRaster function)
-  cl <- parallel::makeCluster(parallel::detectCores() - 2)  # use all but 2 cores
+  tryCatch({
+    # set up parallel processing cluster (will be used by splitRaster function)
+    cl <- parallel::makeCluster(parallel::detectCores())  # use all cores
 
-  tictoc::tic()
+    tictoc::tic()
 
-  # split raster1 into tiles using a regular grid
-  cdl_tiles <- SpaDES.tools::splitRaster(r=region_cdl, nx=div[1], ny=div[2],
-                                         buffer=buffercells, cl=cl)
+    # split raster1 into tiles using a regular grid
+    cdl_tiles <- SpaDES.tools::splitRaster(r=region_cdl, nx=div[1], ny=div[2],
+                                           buffer=buffercells, cl=cl)
+
+  }, error= function(err){ # if the parallel execution fails, try running with only one thread
+
+    print(paste("Split first raster w/ single thread. Parallel processing error= ",err))
+    tictoc::tic()
+
+    # split raster1 into tiles using a regular grid
+    cdl_tiles <- SpaDES.tools::splitRaster(r=region_cdl, nx=div[1], ny=div[2],
+                                           buffer=buffercells)
+  })
 
   ######################################################################################################
   ##### Part 4: If raster2 file path is provided, split raster2 into tiles
   logger::log_info('Splitting second raster.')
 
-  nvc_tiles <- SpaDES.tools::splitRaster(r=region_nvc, nx=div[1], ny=div[2],
+  tryCatch({
+    # set up parallel processing cluster (will be used by splitRaster function)
+    cl <- parallel::makeCluster(parallel::detectCores())  # use all cores
+
+    tictoc::tic()
+
+    nvc_tiles <- SpaDES.tools::splitRaster(r=region_nvc, nx=div[1], ny=div[2],
                                          buffer=buffercells, cl=cl)
+  }, error= function(err){ # if the parallel execution fails, try running with only one thread
+
+    print(paste("Split second raster w/ a single thread. Parallel processing error= ",err))
+    tictoc::tic()
+
+    # split raster1 into tiles using a regular grid
+    nvc_tiles <- SpaDES.tools::splitRaster(r=region_nvc, nx=div[1], ny=div[2],
+                                           buffer=buffercells)
+  })
+
 
   ######################################################################################################
   ##### Part 5: Handle background tiles that are all NA
