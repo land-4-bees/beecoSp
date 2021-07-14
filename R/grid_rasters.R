@@ -41,7 +41,7 @@ grid_rasters <- function(rasterpath, rasterID,
 
   # create directories for output files if they don't already exist
   if (!dir.exists(tiledir)) {
-    dir.create(tiledir)
+    dir.create(tiledir, recursive=T)
   }
 
   #create CDL and NVC tile folders if they don't already exist
