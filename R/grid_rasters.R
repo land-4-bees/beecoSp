@@ -25,6 +25,8 @@ grid_rasters <- function(rasterpath, rasterID,
                         NAvalues,
                         writetiles = T, tiledir) {
 
+  profvis::profvis(torture = 'steps', {
+
   ######################################################################################################
   ##### Part 1: Setup and load data
 
@@ -78,15 +80,17 @@ grid_rasters <- function(rasterpath, rasterID,
     tictoc::tic()
     logger::log_info('Cropping national raster(s) to shapefile extent (if regionalextent is provided).')
 
-    region_cdl <- terra::rast(cdl_path) %>%
-      terra::crop(y=region) %>%
+    region_sf <- sf::st_transform(regionalextent, crs = sf::st_crs(cdl))
+
+    region_cdl <- raster::raster(cdl_path) %>%
+      raster::crop(y=region_sf) %>%
       raster::raster()   # convert to a raster object so the SpaDES package works
 
 
     if (!is.na(veg_path)) {
-      region_nvc <- terra::rast(nvc_path) %>%
-        terra::crop(y=region) %>%
-        raster::raster()   # convert to a raster object so the SpaDES package works
+      region_nvc <- raster::raster(nvc_path) %>%
+        raster::crop(y=region_cdl) #%>%
+        #raster::raster()   # convert to a raster object so the SpaDES package works
 
     }
 
@@ -225,4 +229,6 @@ grid_rasters <- function(rasterpath, rasterID,
   logger::log_info('Gridding function complete, returning pairs of raster tiles as a list.')
 
   return(tile_list)
-}
+#}
+
+})
