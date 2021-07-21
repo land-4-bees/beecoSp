@@ -25,8 +25,6 @@ grid_rasters <- function(rasterpath, rasterID,
                         NAvalues,
                         writetiles = T, tiledir) {
 
-  profvis::profvis(torture = 'steps', {
-
   ######################################################################################################
   ##### Part 1: Setup and load data
 
@@ -229,6 +227,5 @@ grid_rasters <- function(rasterpath, rasterID,
   logger::log_info('Gridding function complete, returning pairs of raster tiles as a list.')
 
   return(tile_list)
-#}
+}
 
-})
