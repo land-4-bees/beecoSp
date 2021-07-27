@@ -70,9 +70,8 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
     logger::log_info('Cropping national raster to shapefile extent (if regionalextent is provided).')
 
-    region_raster <- terra::rast(rasterpath) %>%
-      terra::crop(y=region) %>%
-      raster::raster()   # convert to a raster object so the SpaDES package works
+    region_raster <- raster::raster(rasterpath) %>%
+      raster::crop(y=region)
   }
 
   ######################################################################################################

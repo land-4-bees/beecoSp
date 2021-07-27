@@ -6,6 +6,7 @@
 #'@param years vector of years (integers) to include
 #'@param write_reclass logical, write_reclass = T writes reclass tables to file
 #'@param outfolder folder path to write reclass keys
+#'@export
 
 reclasstables <- function(filepath, states, years, write_reclass, outfolder) {
 

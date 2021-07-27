@@ -12,7 +12,7 @@ grid_one_raster(
   buffercells = c(0, 0),
   NAvalue,
   writetiles = T,
-  tiledir...
+  tiledir
 )
 }
 \arguments{
