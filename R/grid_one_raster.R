@@ -53,12 +53,10 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
     # download shapefile of US states
     region <- tigris::states() %>% dplyr::filter(NAME %in% regionalextent) %>%
-      sf::st_transform(crs = sf::st_crs(input_raster)) %>% # re-project polygon layer to match raster1
-      terra::vect()
+      sf::st_transform(crs = sf::st_crs(input_raster)) # re-project polygon layer to match raster1
 
   } else if ('sf' %in% class(regionalextent)) {
-    region <- sf::st_transform(regionalextent, crs = sf::st_crs(input_raster)) %>%
-      terra::vect()
+    region <- sf::st_transform(regionalextent, crs = sf::st_crs(input_raster))
   }
 
   ######################################################################################################
@@ -79,12 +77,24 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
   logger::log_info('Splitting regional raster into specified number of tiles (n = xdiv * ydiv).')
 
-  # set up parallel processing cluster (will be used by splitRaster function)
-  cl <- parallel::makeCluster(parallel::detectCores())  # use all but 2 cores
+  
+  raster_tiles <- tryCatch({
+    # set up parallel processing cluster (will be used by splitRaster function)
+    cl <- parallel::makeCluster(parallel::detectCores()-2)  # use all but two cores
+    
+    # split raster into tiles using a regular grid
+    raster_tiles <- SpaDES.tools::splitRaster(r=region_raster, nx=div[1], ny=div[2],
+                                              buffer=buffercells, cl=cl)
+    
+  }, error= function(err){ # if the parallel execution fails, try running with only one thread
+    
+    logger::log_info(paste("Split raster w/ single thread. Parallel processing error = ",err))
 
-  # split raster1 into tiles using a regular grid
-  raster_tiles <- SpaDES.tools::splitRaster(r=region_raster, nx=div[1], ny=div[2],
-                                         buffer=buffercells, cl=cl)
+    # split raster into tiles using a regular grid
+    raster_tiles <- SpaDES.tools::splitRaster(r=region_raster, nx=div[1], ny=div[2],
+                                              buffer=buffercells)
+    return(raster_tiles)
+  })
 
   ######################################################################################################
   ##### Part 5: Handle background tiles that are all NA
