@@ -77,17 +77,17 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
   logger::log_info('Splitting regional raster into specified number of tiles (n = xdiv * ydiv).')
 
-  
+
   raster_tiles <- tryCatch({
     # set up parallel processing cluster (will be used by splitRaster function)
     cl <- parallel::makeCluster(parallel::detectCores()-2)  # use all but two cores
-    
+
     # split raster into tiles using a regular grid
     raster_tiles <- SpaDES.tools::splitRaster(r=region_raster, nx=div[1], ny=div[2],
                                               buffer=buffercells, cl=cl)
-    
+
   }, error= function(err){ # if the parallel execution fails, try running with only one thread
-    
+
     logger::log_info(paste("Split raster w/ single thread. Parallel processing error = ",err))
 
     # split raster into tiles using a regular grid
@@ -111,9 +111,6 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
     raster::cellStats(x, stat=max) == NAvalue },
     .options = furrr::furrr_options(seed = TRUE)) %>% unlist()
 
-  # make list object of raster tiles to return (non-NA values in one or more raster layers)
-  raster_tiles <- raster_tiles[!todiscard_tiles]
-
   ######################################################################################################
   ##### Part 6: Write tiles as individual .tif files
 
@@ -122,12 +119,12 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
 
     # set up parallel processing cluster
-    cl <- parallel::makeCluster(parallel::detectCores())  # use all cores
+    cl <- parallel::makeCluster(parallel::detectCores()-2)  # use all cores
     parallel::clusterExport(cl=cl, envir=environment(),
                             varlist=c('raster_tiles', 'tiledir', 'rasterID'))
     doParallel::registerDoParallel(cl)  # register the parallel backend
 
-    # exclude tiles that are all NA values for BOTH layers
+    # exclude tiles that are all NA values
     foreach::foreach(i= which(!(todiscard_tiles))) %dopar% {
 
       raster::writeRaster(raster_tiles[[i]], paste0(tiledir, "/", rasterID, "/", rasterID,"_Tile", i, ".tif"), overwrite=T)
