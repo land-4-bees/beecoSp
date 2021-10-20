@@ -55,8 +55,6 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
     region <- tigris::states() %>% dplyr::filter(NAME %in% regionalextent) %>%
       sf::st_transform(crs = sf::st_crs(input_raster)) # re-project polygon layer to match raster1
 
-    }
-
   } else if ('sf' %in% class(regionalextent)) {
     region <- sf::st_transform(regionalextent, crs = sf::st_crs(input_raster))
   }
