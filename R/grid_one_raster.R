@@ -55,6 +55,8 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
     region <- tigris::states() %>% dplyr::filter(NAME %in% regionalextent) %>%
       sf::st_transform(crs = sf::st_crs(input_raster)) # re-project polygon layer to match raster1
 
+    }
+
   } else if ('sf' %in% class(regionalextent)) {
     region <- sf::st_transform(regionalextent, crs = sf::st_crs(input_raster))
   }
@@ -63,13 +65,18 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
   ##### Part 2: Crop national raster to regional extent
 
   # read input raster and crop to extent of provided shapefile
-  # use the terra package because it is faster than raster.
   if (!any(is.na(regionalextent))) {
 
     logger::log_info('Cropping national raster to shapefile extent (if regionalextent is provided).')
 
-    region_raster <- raster::raster(rasterpath) %>%
-      raster::crop(y=region)
+    region_raster <- raster::raster(rasterpath)
+
+    # if buffercells is specified, add buffer around state boundary to make sure edge tiles have sufficient overlap
+    if (buffercells[1] > 0) {
+      region <- sf::st_buffer(region, dist=(res(region_raster)*buffercells[1]))
+    }
+
+    region_raster <- raster::crop(region_raster, y=region)
   }
 
   ######################################################################################################

@@ -80,12 +80,18 @@ grid_rasters <- function(rasterpath, rasterID,
 
     region_sf <- sf::st_transform(regionalextent, crs = sf::st_crs(cdl))
 
-    region_cdl <- raster::raster(cdl_path) %>%
-      raster::crop(y=region_sf)
+    region_cdl <- raster::raster(cdl_path)
+
+    # if buffercells is specified, add buffer around state boundary to make sure edge tiles have sufficient overlap
+    if (buffercells[1] > 0) {
+      region_sf <- sf::st_buffer(region_sf, dist=(res(region_cdl)*buffercells[1]))
+    }
+
+    region_cdl <- raster::crop(region_cdl, y=region_sf)
 
     if (!is.na(veg_path)) {
       region_nvc <- raster::raster(nvc_path) %>%
-        raster::crop(y=region_cdl) 
+        raster::crop(y=region_cdl)
     }
 
       tictoc::toc()
