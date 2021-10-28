@@ -16,8 +16,6 @@
 #'@export
 #'@import logger
 #'@import future
-#'@examples
-#'example forthcoming.
 
 grid_rasters <- function(rasterpath, rasterID,
                         regionalextent=NA,

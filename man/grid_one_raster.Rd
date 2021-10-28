@@ -41,9 +41,6 @@ Split regional or national raster into gridded tiles
 \details{
 NAvalue parameter is used to identify raster tiles that are all background (e.g. areas of open water). These background tiles are excluded from list of output tiles and tile directory.
 }
-\examples{
-example forthcoming.
-}
 \keyword{bees}
 \keyword{ecology}
 \keyword{landscape}
