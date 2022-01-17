@@ -18,10 +18,13 @@
 #'@import future
 
 grid_rasters <- function(rasterpath, rasterID,
-                        regionalextent=NA,
-                        div, buffercells=c(0,0),
-                        NAvalues,
-                        writetiles = T, tiledir) {
+                         regionalextent=NA,
+                         div,
+                         buffercells=c(0,0),
+                         NAvalues,
+                         writetiles=T,
+                         tiledir,
+                         verbosewrite=F) {
 
   ######################################################################################################
   ##### Part 1: Setup and load data
@@ -39,12 +42,15 @@ grid_rasters <- function(rasterpath, rasterID,
 
   # create directories for output files if they don't already exist
   if (!dir.exists(tiledir)) {
-    dir.create(tiledir, recursive=T)
+    dir.create(tiledir, recursive=F)
   }
 
   #create CDL and NVC tile folders if they don't already exist
   if (!dir.exists(paste0(tiledir, "/", rasterID[1]))) {
     dir.create(paste0(tiledir, "/", rasterID[1]))
+  }
+
+  if (!dir.exists(paste0(tiledir, "/", rasterID[2]))) {
     dir.create(paste0(tiledir, "/", rasterID[2]))
   }
 
@@ -66,6 +72,13 @@ grid_rasters <- function(rasterpath, rasterID,
       terra::vect()
   }
 
+  if (!dir.exists(tiledir)) {
+    stop("Tile directory was not created. What's going on???")
+  }
+
+  if (!dir.exists(paste0(tiledir, "/", rasterID[2])) | !dir.exists(paste0(tiledir, "/", rasterID[1])) ) {
+    stop("Tile sub-directories were not created. What's going on???")
+  }
   ######################################################################################################
   ##### Part 2: Crop national rasters to regional extent
 
@@ -92,7 +105,7 @@ grid_rasters <- function(rasterpath, rasterID,
         raster::crop(y=region_cdl)
     }
 
-      tictoc::toc()
+    tictoc::toc()
   }
 
   ######################################################################################################
@@ -133,7 +146,7 @@ grid_rasters <- function(rasterpath, rasterID,
     tictoc::tic()
 
     nvc_tiles <- SpaDES.tools::splitRaster(r=region_nvc, nx=div[1], ny=div[2],
-                                         buffer=buffercells, cl=cl)
+                                           buffer=buffercells, cl=cl)
   }, error= function(err){ # if the parallel execution fails, try running with only one thread
 
     logger::log_info(paste("Split second raster w/ a single thread. Parallel processing error = ",err))
@@ -160,22 +173,23 @@ grid_rasters <- function(rasterpath, rasterID,
 
   tictoc::tic()
   # list of NA tiles for raster1
+  # tiles can be NA by matching specified NA value or if pixel value is NA (equal to meta-data no data value)
   todiscard_cdl <- furrr::future_map(.x=cdl_tiles, .f = function(x) {
-    raster::cellStats(x, stat=max) == NAvalues[1] },
+    raster::cellStats(x, stat=max) == NAvalues[1] | raster::cellStats(x, stat=max) == -Inf },
     .options = furrr::furrr_options(seed = TRUE)) %>% unlist()
 
   # list of NA tiles raster2
   todiscard_nvc <- furrr::future_map(.x=nvc_tiles, .f = function(x) {
-      raster::cellStats(x, stat=max) == NAvalues[2] },
-      .options = furrr::furrr_options(seed = TRUE)) %>% unlist()
+    raster::cellStats(x, stat=max) == NAvalues[2] | raster::cellStats(x, stat=max) == -Inf},
+    .options = furrr::furrr_options(seed = TRUE)) %>% unlist()
 
   tictoc::toc()
 
-    # if NA tiles from raster1 and raster2 do NOT match, make folder of mis-matched tiles
-    # (no match = one layer is all background, but the other has values other than NA)
+  # if NA tiles from raster1 and raster2 do NOT match, make folder of mis-matched tiles
+  # (no match = one layer is all background, but the other has values other than NA)
 
   if (any(todiscard_cdl != todiscard_nvc)) {
-      warning('Raster1 and Raster2 background tiles (100% NA values) do not match.
+    warning('Raster1 and Raster2 background tiles (100% NA values) do not match.
            The boundaries (e.g. land/water) of these rasters are probably different.
            Look at the tiles in the mismatched tiles folder.')
 
@@ -188,7 +202,7 @@ grid_rasters <- function(rasterpath, rasterID,
     for (i in which(todiscard_cdl != todiscard_nvc)) {
 
       raster::writeRaster(cdl_tiles[[i]], paste0(tiledir, "/MismatchedBorderTiles/", rasterID[1],
-                                                   "Tile", i, ".tif"), overwrite=T)
+                                                 "Tile", i, ".tif"), overwrite=T)
       if (!is.na(veg_path)) {
         raster::writeRaster(nvc_tiles[[i]], paste0(tiledir, "/MismatchedBorderTiles/", rasterID[2],
                                                    "Tile", i, ".tif"), overwrite=T)
@@ -198,7 +212,7 @@ grid_rasters <- function(rasterpath, rasterID,
 
   # make list object of raster tiles to return (non-NA values in one or more raster layers)
   tile_list <- furrr::future_map2(.x= purrr::discard(cdl_tiles, todiscard_nvc&todiscard_cdl),
-                               .y= purrr::discard(nvc_tiles, todiscard_nvc&todiscard_cdl), .f=c)
+                                  .y= purrr::discard(nvc_tiles, todiscard_nvc&todiscard_cdl), .f=c)
 
   ######################################################################################################
   ##### Part 6: Write tiles as individual .tif files
@@ -209,7 +223,7 @@ grid_rasters <- function(rasterpath, rasterID,
     # set up parallel processing cluster
     cl <- parallel::makeCluster(parallel::detectCores()-2)  # use all but 2 cores
     parallel::clusterExport(cl=cl, envir=environment(),
-                      varlist=c('cdl_tiles', 'nvc_tiles', 'tiledir', 'rasterID'))
+                            varlist=c('cdl_tiles', 'nvc_tiles', 'tiledir', 'rasterID'))
 
     doParallel::registerDoParallel(cl)  # register the parallel backend
 
@@ -219,6 +233,10 @@ grid_rasters <- function(rasterpath, rasterID,
 
       raster::writeRaster(cdl_tiles[[i]], paste0(tiledir, "/", rasterID[1], "/", rasterID[1], "_Tile", i, ".tif"), overwrite=T)
       raster::writeRaster(nvc_tiles[[i]], paste0(tiledir, "/", rasterID[2], "/", rasterID[2], "_Tile", i, ".tif"), overwrite=T)
+
+      if (verbosewrite == T) {
+        logger::log_info(paste0('Finished writing raster pair #', i, ": ", rasterID[1], "_", rasterID[2] ))
+      }
     }
   }
 
