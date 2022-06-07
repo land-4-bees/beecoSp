@@ -8,10 +8,6 @@ library(devtools)
 #devtools::install_github("klutometis/roxygen")
 library(roxygen2)
 
-#check and make sure working directory is set correctly
-getwd()
-
-setwd("Z:/SoftwareDevelopment/beecoSp")
 #create and name R package (do not run again)
 #create("beecoSp")
 
@@ -36,7 +32,7 @@ devtools::document()
 
 
 #install package locally
-setwd("Z:/SoftwareDevelopment")
+setwd("..") # set wd to one above the current wd to be able to install beecoSp locally
 devtools::install("beecoSp")
 
 

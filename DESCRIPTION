@@ -18,4 +18,4 @@ Imports:
     future,
     foreach,
     logger
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

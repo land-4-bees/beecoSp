@@ -12,7 +12,8 @@ grid_rasters(
   buffercells = c(0, 0),
   NAvalues,
   writetiles = T,
-  tiledir
+  tiledir,
+  verbosewrite = F
 )
 }
 \arguments{
