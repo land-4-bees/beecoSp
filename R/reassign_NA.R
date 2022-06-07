@@ -12,17 +12,17 @@
 
 reassign_NA <- function(map, window_size, replace_any=F) {
 
-    if (replace_any == T) {
+  if (replace_any == T) {
 
-      #use regular mode function
-      pooey <- terra::focal(x=map, na.only=T, w=window_size, fun='modal',na.rm=T)
+    #use regular mode function
+    pooey <- terra::focal(x=map, na.only=T, w=window_size, fun='modal',na.rm=T)
 
-    } else if (replace_any == F) {
+  } else if (replace_any == F) {
 
-      #use custom function, but specify which classes can be returned as the mode.
-      #If the allowed classes don't exist, return -1001
-      pooey <- terra::focal(x=map, na.only=T, w=window_size, fun=beecoSp::custom_modal, na.rm=T)
-    }
+    #use custom function, but specify which classes can be returned as the mode.
+    #If the allowed classes don't exist, return -1001
+    pooey <- terra::focal(x=map, na.only=T, w=window_size, fun=beecoSp::custom_modal, na.rm=T)
+  }
 
   return(pooey)
 }
