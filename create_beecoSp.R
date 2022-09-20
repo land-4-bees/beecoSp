@@ -2,6 +2,7 @@
 #this allows it to be loaded directly from Github
 
 #adapted from this blog post: https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/
+setwd("E:/share/SoftwareDevelopment/beecoSp")
 
 #install.packages("devtools")
 library(devtools)
@@ -20,7 +21,6 @@ usethis::use_package("plyr")
 usethis::use_package("future")
 usethis::use_package("foreach")
 usethis::use_package("logger")
-#updated 'description file'
 
 
 #create documentation
