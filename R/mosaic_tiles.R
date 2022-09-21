@@ -13,9 +13,14 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
   library(terra)
 
   # save some strings to use later
-  compress_filename <- paste0(outdir, '/', ID, '_FinalRasterCompress.tif')
-  rawsize_filename <- paste0(outdir, '/', ID, '_FinalRaster.tif')
+  if (is.na(season)) {
+    compress_filename <- paste0(outdir, '/', ID, '_FinalRasterCompress.tif')
+    rawsize_filename <- paste0(outdir, '/', ID, '_FinalRaster.tif')
 
+  } else {
+    compress_filename <- paste0(outdir, '/', ID, '_', season, '_FinalRasterCompress.tif')
+    rawsize_filename <- paste0(outdir, '/', ID, '_', season, '_FinalRaster.tif')
+  }
   # make list of files in tiledir
   tile_paths <- list.files(tiledir, full.names=T)
   logger::log_info('Make mega: Identified ', length(tile_paths), ' raster files before filtering.')
@@ -44,10 +49,10 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
     onetile <- terra::rast(tile_paths[[1]])
 
     if (compress == T) {
-      terra::writeRaster(onetile, filename=paste0(outdir, '/', ID, '_FinalRasterCompress.tif'), overwrite=T,
+      terra::writeRaster(onetile, filename=compress_filename, overwrite=T,
                        wopt= list(gdal=c("COMPRESS=DEFLATE", "PREDICTOR=3")))
     } else {
-      terra::writeRaster(onetile, filename=paste0(outdir, '/', ID, '_FinalRaster.tif'), overwrite=T)
+      terra::writeRaster(onetile, filename=rawsize_filename, overwrite=T)
     }
   }
 
@@ -74,9 +79,15 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
     for (i in 1:ngroups) {
       assign(x=paste0('args', i), value=tile_list[clusters == i])
 
+      # save file name for mega-tile
+      if (!is.na(season)) {
+        megatile_filename <- paste0(tiledir, '/', ID, '_', season, '_MegaTile', i, "_", chunksize1, '.tif')
+      } else if (is.na(season)) {
+        megatile_filename <- paste0(tiledir, '/', ID, '_MegaTile', i, '_', chunksize1, '.tif')
+      }
       # execute mosaic to create a mega-tile
       assign(x=paste0('MT', i), value= base::eval(rlang::call2("mosaic", !!!get(paste0('args', i)), .ns="terra", fun='mean',
-                                                               filename=paste0(tiledir, '/', ID,"_MegaTile", i, "_", chunksize1, '.tif'),
+                                                               filename=megatile_filename,
                                                                overwrite=T)))
       if (verbose == T) {
         logger::log_info(paste0('Mega tile ', i, " is finished."))
@@ -106,6 +117,11 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
       mega_paths <- mega_paths[grepl(mega_paths, pattern=ID)]
     }
 
+    # filter to correct season
+    if (!is.na(season)) {
+      mega_paths <- mega_paths[grepl(mega_paths, pattern=season)]    
+    }
+
     logger::log_info('Make final: Trying to load ', length(mega_paths), ' raster files after filtering.')
 
     # load mega-tiles into list to mosaic
@@ -126,10 +142,10 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
       onetile <- terra::rast(mega_paths[[1]])
 
       if (compress == T) {
-        terra::writeRaster(onetile, filename=paste0(outdir, '/', ID, '_FinalRasterCompress.tif'), overwrite=T,
+        terra::writeRaster(onetile, filename=compress_filename, overwrite=T,
                            wopt= list(gdal=c("COMPRESS=DEFLATE", "PREDICTOR=3")))
       } else {
-        terra::writeRaster(onetile, filename=paste0(outdir, '/', ID, '_FinalRaster.tif'), overwrite=T)
+        terra::writeRaster(onetile, filename=rawsize_filename, overwrite=T)
       }
     } else if (length(mega_paths) > 1) {
 
