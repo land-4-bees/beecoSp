@@ -5,7 +5,6 @@
 #'@param chunksize numeric indicating how many tiles should be in each cluster
 #'@param plot_clusters logical, make map indicating cluster membership?
 #'@export
-#'@noRd
 #'@keywords Internal
 #'
 calc_tile_clusters <- function(tile_list, chunksize, plot_clusters=F) {

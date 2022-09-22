@@ -16,11 +16,11 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
   if (is.na(season)) {
     compress_filename <- paste0(outdir, '/', ID, '_FinalRasterCompress.tif')
     rawsize_filename <- paste0(outdir, '/', ID, '_FinalRaster.tif')
-
   } else {
     compress_filename <- paste0(outdir, '/', ID, '_', season, '_FinalRasterCompress.tif')
     rawsize_filename <- paste0(outdir, '/', ID, '_', season, '_FinalRaster.tif')
   }
+
   # make list of files in tiledir
   tile_paths <- list.files(tiledir, full.names=T)
   logger::log_info('Make mega: Identified ', length(tile_paths), ' raster files before filtering.')
@@ -119,7 +119,7 @@ mosaic_tiles <- function(tiledir, chunksize1, ID, outdir, season=NA, compress=T,
 
     # filter to correct season
     if (!is.na(season)) {
-      mega_paths <- mega_paths[grepl(mega_paths, pattern=season)]    
+      mega_paths <- mega_paths[grepl(mega_paths, pattern=season)]
     }
 
     logger::log_info('Make final: Trying to load ', length(mega_paths), ' raster files after filtering.')

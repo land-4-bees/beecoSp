@@ -13,7 +13,7 @@ mosaic_states(statedir, tier, ID, outdir, season = NA, usepackage = "gdal")
 
 \item{ID}{variable to identify groups of rasters to process together (e.g. CDLYear). Will be included in file name for output raster.}
 
-\item{outdir}{file path to directory where natinoal rasters should be saved}
+\item{outdir}{file path to directory where national rasters should be saved}
 
 \item{season}{if applicable, vector of seasons to process. E.g. spring, summer, fall}
 
