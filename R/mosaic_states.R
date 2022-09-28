@@ -12,6 +12,13 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
 
   library(terra)
 
+  # save file name for final, national raster
+  if (!is.na(season)) {
+    national_filename <- paste0(outdir, '/', ID, "_", season, "_NationalRaster.tif")
+  } else if (is.na(season)) {
+    national_filename <- paste0(statedir, '/', ID,"_", "NationalRaster.tif")
+  }
+
   if (1 %in% tier) {
     # make list of files in statedir
     state_paths <- list.files(statedir, full.names=T)
@@ -24,7 +31,7 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
 
     # filter to correct season
     if (!is.na(season)) {
-      tile_paths <- tile_paths[grepl(tile_paths, pattern=season)]
+      state_paths <- state_paths[grepl(state_paths, pattern=season)]
     }
 
     # filter to correct year of CDL (or other ID variable, as necessary)
@@ -51,7 +58,7 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
       }
 
       # assign tiles to clusters based on lat/long
-      clusters <- beecoSp::calc_state_clusters(state_list=state_list, tier=1, plot_clusters=T, mult=0.6)
+      clusters <- beecoSp::calc_state_clusters(state_list=state_list, tier=1, plot_clusters=F, mult=0.6)
       ngroups <- length(unique(clusters))
 
       logger::log_info('Tier 1: starting mosaic-ing state rasters using ', ngroups, " clusters.")
@@ -59,22 +66,23 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
       ##### create mega tiles by executing mosaic respecting cluster membership
       for (i in 1:ngroups) {
 
+        # save file name for mega-tile
+        if (!is.na(season)) {
+          megatile_filename_t1 <- paste0(statedir, '/', ID, "_", season, "_NationalMegaTile", i, '_Tier1.tif')
+        } else if (is.na(season)) {
+          megatile_filename_t1 <- paste0(statedir, '/', ID,"_NationalMegaTile", i, '_Tier1.tif')
+        }
+
         if (usepackage == 'terra') {
 
           assign(x=paste0('args', i), value=state_list[clusters == i])
-
-          # save file name for mega-tile
-          if (!is.na(season)) {
-            megatile_filename_t1 <- paste0(statedir, '/', ID, "_", season, "_NationalMegaTile", i, '_Tier1.tif')
-          } else if (is.na(season)) {
-            megatile_filename_t1 <- paste0(statedir, '/', ID,"_NationalMegaTile", i, '_Tier1.tif')
-          }
 
           # execute mosaic to create a mega-tile
           base::eval(rlang::call2("mosaic", !!!get(paste0('args', i)), .ns="terra", fun='mean',
                                                                    filename=megatile_filename_t1,
                                                                    overwrite=T))
         } else if (usepackage == 'gdal') {
+
           gdalUtils::mosaic_rasters(gdalfile=state_paths[clusters == i],
                                   dst_dataset=megatile_filename_t1,
                                   overwrite=T)
@@ -122,18 +130,26 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
       mega_list[[i]] <- terra::rast(mega_paths[i])
     }
 
-    # assign tiles to clusters based on lat/long
-    clusters2 <- beecoSp::calc_state_clusters(state_list=mega_list, tier=2, plot_clusters=F, mult=0.8)
-    ngroups2 <- length(unique(clusters2))
+    # if a state has only one mega-tile, write single mega-tile as final raster
+    if (length(mega_paths) == 1) {
+      logger::log_info('This state only has one mega-tile. Writing this raster as final output.')
 
-    logger::log_info('Tier 2: starting mosaic-ing mega tiles using ', ngroups2, " clusters.")
+      # copy final raster to folder with cleaner file names
+      file.copy(from=mega_paths[[1]], to=national_filename)
 
-    ##### create mega tiles by executing mosaic respecting cluster membership
-    for (i in 1:ngroups2) {
+      # remove tier three to skip the next section of code
+      tier <- gsub(tier, pattern='3', replacement="")
 
-      if (usepackage == 'terra') {
+    } else {
 
-        assign(x=paste0('args2', i), value=mega_list[clusters2 == i])
+      # assign tiles to clusters based on lat/long
+      clusters2 <- beecoSp::calc_state_clusters(state_list=mega_list, tier=2, plot_clusters=F, mult=0.8)
+      ngroups2 <- length(unique(clusters2))
+
+      logger::log_info('Tier 2: starting mosaic-ing mega tiles using ', ngroups2, " clusters.")
+
+      ##### create mega tiles by executing mosaic respecting cluster membership
+      for (i in 1:ngroups2) {
 
         # save file name for mega-tile
         if (!is.na(season)) {
@@ -142,23 +158,26 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
           megatile_filename_t2 <- paste0(statedir, '/', ID,"_NationalMegaTile", i, '_Tier2.tif')
         }
 
-        base::eval(rlang::call2("mosaic", !!!get(paste0('args2', i)), .ns="terra", fun='mean',
-                                filename=megatile_filename_t2,
-                                overwrite=T))
+        if (usepackage == 'terra') {
 
-      } else if (usepackage == 'gdal') {
+          assign(x=paste0('args2', i), value=mega_list[clusters2 == i])
 
-        gdalUtils::mosaic_rasters(gdalfile=mega_paths[clusters2 == i],
-                              dst_dataset=megatile_filename_t2,
-                              overwrite=T)
+          base::eval(rlang::call2("mosaic", !!!get(paste0('args2', i)), .ns="terra", fun='mean',
+                                  filename=megatile_filename_t2,
+                                  overwrite=T))
+
+        } else if (usepackage == 'gdal') {
+
+          gdalUtils::mosaic_rasters(gdalfile=mega_paths[clusters2 == i],
+                                dst_dataset=megatile_filename_t2,
+                                overwrite=T)
+        }
+
+        logger::log_info(paste0('Tier 2: Mega tile ', i, " is finished."))
+        rm(list=ls(pattern='args2'))
       }
-
-      logger::log_info(paste0('Tier 2: Mega tile ', i, " is finished."))
-      rm(list=ls(pattern='args2'))
     }
-
     logger::log_info('Tier 2: Finished creating mega tiles.')
-
   }
 
   if (3 %in% tier) {
@@ -192,18 +211,22 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
       mega_list2[[i]] <- terra::rast(mega_paths2[i])
     }
 
-    # assign tiles to clusters based on lat/long
-    clusters3 <- beecoSp::calc_state_clusters(state_list=mega_list2, tier=3, plot_clusters=F, mult=10)
-    ngroups3 <- length(unique(clusters3))
+    # if a state has only one mega-tile, write single mega-tile as final raster
+    if (length(mega_paths) == 1) {
+      logger::log_info('This state only has one mega-tile. Writing this raster as final output.')
 
-    logger::log_info('Tier 3: starting mosaic-ing mega tiles using ', ngroups3, ' clusters.')
+      # copy final raster to folder with cleaner file names
+      file.copy(from=mega_paths2[[1]], to=national_filename)
 
-    ##### create mega tiles by executing mosaic respecting cluster membership
-    for (i in 1:ngroups3) {
+    } else {
+      # assign tiles to clusters based on lat/long
+      clusters3 <- beecoSp::calc_state_clusters(state_list=mega_list2, tier=3, plot_clusters=F, mult=10)
+      ngroups3 <- length(unique(clusters3))
 
-      if (usepackage == 'terra') {
+      logger::log_info('Tier 3: starting mosaic-ing mega tiles using ', ngroups3, ' clusters.')
 
-        assign(x=paste0('args3', i), value=mega_list2[clusters3 == i])
+      ##### create mega tiles by executing mosaic respecting cluster membership
+      for (i in 1:ngroups3) {
 
         # save file name for mega-tile
         if (!is.na(season)) {
@@ -212,22 +235,33 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
           megatile_filename_t3 <- paste0(statedir, '/', ID,"_NationalMegaTile", i, '_Tier3.tif')
         }
 
-        base::eval(rlang::call2("mosaic", !!!get(paste0('args3', i)), .ns="terra", fun='mean',
-                                filename=megatile_filename_t3,
-                                overwrite=T))
+        if (usepackage == 'terra') {
 
-      } else if (usepackage == 'gdal') {
+          assign(x=paste0('args3', i), value=mega_list2[clusters3 == i])
 
-        gdalUtils::mosaic_rasters(gdalfile=mega_paths2[clusters3 == i],
-                                  dst_dataset=megatile_filename_t3,
-                                  overwrite=T,
-                                  co=c("COMPRESS=DEFLATE", "BIGTIFF=YES"))
+          base::eval(rlang::call2("mosaic", !!!get(paste0('args3', i)), .ns="terra", fun='mean',
+                                  filename=megatile_filename_t3,
+                                  overwrite=T))
+
+        } else if (usepackage == 'gdal') {
+
+          gdalUtils::mosaic_rasters(gdalfile=mega_paths2[clusters3 == i],
+                                    dst_dataset=megatile_filename_t3,
+                                    overwrite=T,
+                                    co=c("COMPRESS=DEFLATE", "BIGTIFF=YES"))
+
+        }
+        rm(list=ls(pattern='args3'))
 
       }
-      rm(list=ls(pattern='args3'))
 
+      if (ngroups3 == 1) {
+        # copy final raster to one folder with cleaner file names
+        file.copy(from=megatile_filename_t3, to=national_filename)
+      }
     }
-
     logger::log_info('Tier 3: Finished national raster.')
   }
+  logger::log_info(paste0("Make final: Final raster exists? ", file.exists(national_filename)))
+
 }
