@@ -16,7 +16,7 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
   if (!is.na(season)) {
     national_filename <- paste0(outdir, '/', ID, "_", season, "_NationalRaster.tif")
   } else if (is.na(season)) {
-    national_filename <- paste0(statedir, '/', ID,"_", "NationalRaster.tif")
+    national_filename <- paste0(outdir, '/', ID,"_", "NationalRaster.tif")
   }
 
   if (1 %in% tier) {
@@ -132,7 +132,7 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
 
     # if a state has only one mega-tile, write single mega-tile as final raster
     if (length(mega_paths) == 1) {
-      logger::log_info('This state only has one mega-tile. Writing this raster as final output.')
+      logger::log_info('This region only has one mega-tile. Writing this raster as final output.')
 
       # copy final raster to folder with cleaner file names
       file.copy(from=mega_paths[[1]], to=national_filename)
@@ -213,7 +213,7 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
 
     # if a state has only one mega-tile, write single mega-tile as final raster
     if (length(mega_paths) == 1) {
-      logger::log_info('This state only has one mega-tile. Writing this raster as final output.')
+      logger::log_info('This region only has one mega-tile. Writing this raster as final output.')
 
       # copy final raster to folder with cleaner file names
       file.copy(from=mega_paths2[[1]], to=national_filename)
@@ -263,5 +263,13 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
     logger::log_info('Tier 3: Finished national raster.')
   }
   logger::log_info(paste0("Make final: Final raster exists? ", file.exists(national_filename)))
+
+  # if final raster exists, remove megatiles
+  if (file.exists(national_filename)) {
+    state_paths <- list.files(statedir, full.names=T)
+    megatile_paths <- state_paths[grepl(state_paths, pattern= "MegaTile")]
+
+    file.remove(megatile_paths)
+  }
 
 }
