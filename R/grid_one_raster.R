@@ -18,9 +18,13 @@
 #'@import future
 
 
-grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
-                         div, buffercells=c(0,0),
-                         NAvalue, writetiles = T, tiledir) {
+grid_one_raster <- function(rasterpath, rasterID,
+                            regionalextent=NA,
+                            div,
+                            buffercells=c(0,0),
+                            NAvalue,
+                            writetiles = T,
+                            tiledir) {
 
   ######################################################################################################
   ##### Part 1: Setup and load data
@@ -112,7 +116,7 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
   # make list of NA tiles
   todiscard_tiles <- furrr::future_map(.x=raster_tiles, .f = function(x) {
-    raster::cellStats(x, stat=max) == NAvalue },
+    raster::cellStats(x, stat=max) == NAvalue | raster::cellStats(x, stat=max) == -Inf },
     .options = furrr::furrr_options(seed = TRUE)) %>% unlist()
 
   ######################################################################################################
@@ -120,7 +124,6 @@ grid_one_raster <- function(rasterpath, rasterID, regionalextent=NA,
 
   if (writetiles == T) {
     logger::log_info('Writing output tiles.')
-
 
     # set up parallel processing cluster
     cl <- parallel::makeCluster(parallel::detectCores()-2)  # use all cores
