@@ -257,19 +257,20 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
 
       if (ngroups3 == 1) {
         # copy final raster to one folder with cleaner file names
-        file.copy(from=megatile_filename_t3, to=national_filename)
+        file.remove(national_filename)
+        file.copy(from=megatile_filename_t3, to=national_filename, overwrite=T)
       }
     }
     logger::log_info('Tier 3: Finished national raster.')
   }
   logger::log_info(paste0("Make final: Final raster exists? ", file.exists(national_filename)))
 
-  # if final raster exists, remove megatiles
-  if (file.exists(national_filename)) {
-    state_paths <- list.files(statedir, full.names=T)
-    megatile_paths <- state_paths[grepl(state_paths, pattern= "MegaTile")]
-
-    file.remove(megatile_paths)
-  }
+  # # if final raster exists, remove megatiles
+  # if (file.exists(national_filename)) {
+  #   state_paths <- list.files(statedir, full.names=T)
+  #   megatile_paths <- state_paths[grepl(state_paths, pattern= "MegaTile")]
+  #
+  #   file.remove(megatile_paths)
+  # }
 
 }
