@@ -106,11 +106,14 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
 
     # exclude any extra files
     mega_paths <- mega_paths[!grepl(mega_paths, pattern= ".tif.aux")]
-    mega_paths <- mega_paths[grepl(mega_paths, pattern= "MegaTile")]
     mega_paths <- mega_paths[!grepl(mega_paths, pattern= "MegaMega")]
     mega_paths <- mega_paths[!grepl(mega_paths, pattern= "NationalRaster")]
-    mega_paths <- mega_paths[grepl(mega_paths, pattern= paste0("_Tier1.tif"))|
-                               grepl(mega_paths, pattern= paste0("_Tier1.tif"))] #filter to mega-tiles that were created in previous round
+    if (1 %in% tier) {
+      mega_paths <- mega_paths[grepl(mega_paths, pattern= "MegaTile")]
+
+      mega_paths <- mega_paths[grepl(mega_paths, pattern= paste0("_Tier1.tif"))|
+                               grepl(mega_paths, pattern= paste0("_Tier1.tif"))]
+    }#filter to mega-tiles that were created in previous round
 
     if (!is.na(ID)) {
       mega_paths <- mega_paths[grepl(mega_paths, pattern=ID)]
@@ -186,13 +189,15 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
     mega_paths2 <- list.files(statedir, full.names=T)
     logger::log_info('Tier 3: Identified ', length(mega_paths2), ' raster files before filtering.')
 
-
     # exclude any extra files
     mega_paths2 <- mega_paths2[!grepl(mega_paths2, pattern= ".tif.aux")]
-    mega_paths2 <- mega_paths2[grepl(mega_paths2, pattern= "MegaTile")]
     mega_paths2 <- mega_paths2[!grepl(mega_paths2, pattern= "MegaMega")]
-    mega_paths2 <- mega_paths2[grepl(mega_paths2, pattern= paste0("_Tier2.tif"))|
-                                 grepl(mega_paths2, pattern= paste0("_Tier2_gdal.tif"))] #filter to mega-tiles that were created in previous round
+
+    if (2 %in% tier) {
+      mega_paths2 <- mega_paths2[grepl(mega_paths2, pattern= "MegaTile")]
+      mega_paths2 <- mega_paths2[grepl(mega_paths2, pattern= paste0("_Tier2.tif"))|
+                                 grepl(mega_paths2, pattern= paste0("_Tier2_gdal.tif"))]
+      } #filter to mega-tiles that were created in previous round
 
     if (!is.na(ID)) {
       mega_paths2 <- mega_paths2[grepl(mega_paths2, pattern=ID)]
@@ -212,7 +217,7 @@ mosaic_states <- function(statedir, tier, ID, outdir, season=NA, usepackage='gda
     }
 
     # if a state has only one mega-tile, write single mega-tile as final raster
-    if (length(mega_paths) == 1) {
+    if (length(mega_paths2) == 1) {
       logger::log_info('This region only has one mega-tile. Writing this raster as final output.')
 
       # copy final raster to folder with cleaner file names
