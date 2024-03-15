@@ -14,24 +14,24 @@
 #' execute_landclip()
 #'
 #'
-execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_value=NA) {
+execute_landclip <- function(polygons, rasterpath, idvar, outdir, overrast, na_value=NA, datatype) {
   #check that output directory is valid
   if (!dir.exists(outdir)){
     #create folder if the directory doesn't exist
     dir.create(outdir)
   }
 
-  land <- raster::raster(rasterpath)
+  land <- terra::rast(rasterpath)
 
   #check that polygons are in same projection as landscape raster
   #if projections are not the same, project polygon layer
-  if (sp::proj4string(land) != sp::proj4string(polygons)) {
-    polygons <- sp::spTransform(polygons, CRS=sp::proj4string(land))
+  if (sf::st_crs(land) != sf::st_crs(polygons)) {
+    polygons <- sf::st_transform(polygons, crs=sf::st_crs(land))
   }
 
   #store list of names of landscapes to be processed
   polygon_ids <- as.list(polygons[[idvar]])
   plyr::ldply(polygon_ids, .fun=clipmask, land=land, polygons=polygons, outdir=outdir, idvar=idvar,
-              overrast=overrast, na_value=na_value)
+              overrast=overrast, na_value=na_value, datatype=datatype)
 
 }

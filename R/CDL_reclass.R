@@ -14,6 +14,7 @@
 #' 'CDL_reclass' example forthcoming.
 
 CDL_reclass <- function(rasterpath, reclasstable, from, to, writerast=F, outpath, meanreclass) {
+
   cdlrast <- raster::raster(rasterpath)
   reclasstable <- as.data.frame(reclasstable)
   reclassmatrix <- matrix(reclasstable[,names(reclasstable) == from])

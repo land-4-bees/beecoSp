@@ -13,26 +13,29 @@
 #'see 'execute_landclip' for usage example.
 
 #clip and mask landscape raster from polygon, export as .tif file
-clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_value=NA) {
+clipmask <- function(land, polygonID, polygons, outdir, idvar, overrast, na_value=NA, datatype=NA) {
+
   #subset 'polygons' layer to just polygon that matches ID of specific row
   onepoly <- polygons[polygons[[idvar]] == polygonID,]
-  clip <- raster::crop(land, onepoly)
-  mask <- raster::mask(clip, onepoly)
+  clip <- terra::crop(land, onepoly)
+  mask <- terra::mask(clip, onepoly)
 
   if (!is.na(na_value)) {
-    raster::NAvalue(mask) <- na_value
+    terra::NAflag(mask) <- na_value
   }
+
   #store id variable for specific landscape raster
   nameraster <- as.character(onepoly[[idvar]])
 
   #add id variable to output directory file path
-  rasterpath <- paste(outdir, nameraster, sep="/")
+  outrst_path <- paste0(outdir, "/", nameraster, '.tif')
 
   #write raster file as .tif to output directory
-  if (!is.na(na_value)) {
-    raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast, NAflag=na_value)
+  if (!is.na(datatype)) {
+    terra::writeRaster(mask, filename=outrst_path, overwrite=overrast,
+                       NAflag=na_value, datatype=datatype)
   } else {
-    raster::writeRaster(mask, filename=rasterpath, format='GTiff', overwrite=overrast)
+    terra::writeRaster(mask, filename=outrst_path, filetype='GTiff', overwrite=overrast, NAflag=na_value)
   }
   return(data.frame(LandID=nameraster, WriteComplete=T))
 }

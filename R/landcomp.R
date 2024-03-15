@@ -22,8 +22,6 @@
 
 landcomp <- function(landdir=T, landfiles, writeoutput=T, outfile, attr_path=NA, attr_value, background=F, bgvalues=-1000) {
 
-raster::rasterOptions(tmptime=2)
-
 
 #make list of raw landscape .tif files
 if (landdir==T) {
@@ -31,48 +29,30 @@ if (landdir==T) {
 }
 if (landdir==F) {lands <- landfiles}
 
-#calculate landscape composition for first landscape
-land <- raster::raster(lands[1])
+# function to calculate landscape composition
+comp_funct <- function(y, background=background) {
+  land <- terra::rast(y)
+  dfn <- terra::freq(land) %>%
+    select(-layer)
 
-df1 <- data.frame(table(raster::values(land)))
-if (length(df1) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
+  if (length(dfn) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
+  names(dfn) <- c("VALUE", "Cell_Num")
 
-
-# Go parallel !!!
-
-# Register workers for parallelization
-cl <- parallel::makeCluster(parallel::detectCores())
-doSNOW::registerDoSNOW(cl)
-
-# Create a progress bar for the parallelization loop
-pb <- txtProgressBar(min=1, max=length(lands), style=3)
-progress <- function(n) setTxtProgressBar(pb, n)
-opts <- list(progress=progress)
-
-
-#loop over all other landscapes and merge composition files with first one
-if (length(lands) > 1) {
-  temp <- foreach::foreach(i=1:length(lands), .options.snow=opts, .packages = c('raster', 'rgdal')) %dopar%  {
-    land <- raster::raster(lands[i])
-    dfn <- data.frame(table(raster::values(land), useNA= 'ifany'))
-    if (length(dfn) != 2) { stop('Something is wrong with input raster. Could not tabulate unique values') }
-    names(dfn) <- c("VALUE", "Cell_Num")
-
-    if (background == T) {
-      dfn <- dfn[!dfn$VALUE %in% bgvalues,]
-      #if (length(dfn$VALUE == 0)) { stop (paste0('Landscape', ' land cover contains only background values. Check raster files.'))}
-    }
-    dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
-    dfn$Landscape <- gsub(basename(lands[i]), pattern='.tif', replacement="")
-    return(dfn)
+  if (background == T) {
+    dfn <- dfn[!dfn$VALUE %in% bgvalues,]
   }
+
+  dfn$Pct_Land <- (dfn$Cell_Num/sum(dfn$Cell_Num))*100
+  dfn$Landscape <- gsub(basename(y), pattern='.tif', replacement="")
+
+  dfn <- dfn %>% dplyr::select(Landscape, dplyr::everything())
+
+  return(dfn)
 }
 
-# stop clusters for parallelization
-parallel::stopCluster(cl)
+all <- purrr::map(lands, comp_funct, background=background) %>%
+  purrr::list_rbind()
 
-#convert data frames in list
-all <- plyr::rbind.fill(temp)
 
 if (!is.na(attr_path)) {
   #import NASS attribute table
@@ -86,7 +66,6 @@ if (!is.na(attr_path)) {
 if (writeoutput==T) {
   write.csv(all, file=outfile)
 }
-
 
 return(all)
 }
